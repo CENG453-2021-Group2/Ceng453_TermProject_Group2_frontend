@@ -1,5 +1,6 @@
 package group2.monopoly.frontend;
 
+import group2.monopoly.frontend.BoardParts.*;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -17,13 +18,37 @@ public class BoardRectangles {
     int width, height;
     int text_margin_width = 20;
     int text_margin_height = 30;
-    List<String> board_elements;
+    List<BoardElement> board_elements = new ArrayList<>();
 
-    public BoardRectangles(int width, int height, List<String> board_elements) {
+    public BoardRectangles(int width, int height, List<List<String>> board_elements) {
         rects = new Group();
         this.width = width;
         this.height = height;
-        this.board_elements = board_elements;
+        for (List<String> list : board_elements) {
+            if (list.get(0).equals("Property")) {
+                Property property = new Property(list.get(1));
+                property.setColor(Color.CADETBLUE);
+                this.board_elements.add(property);
+            }
+            else if (list.get(0).equals("Income tax")) {
+                this.board_elements.add(new IncomeTax());
+            }
+            else if (list.get(0).equals("Go to jail")) {
+                this.board_elements.add(new GoToJail());
+            }
+            else if (list.get(0).equals("Railroad/Ferry")) {
+                this.board_elements.add(new RailroadFerry());
+            }
+            else if (list.get(0).equals("Jail/Just visiting")) {
+                this.board_elements.add(new Jail());
+            }
+            else if (list.get(0).equals("Start point")) {
+                this.board_elements.add(new StartPoint());
+            }
+            else {
+                System.out.println("Error: " + list.get(0) + " is not a valid board element");
+            }
+        }
     }
 
     public void createRectangles() {
@@ -38,10 +63,12 @@ public class BoardRectangles {
             for (j = 0; j < 5; j++) {
                 if (i == 0 || j == 0 || i == 4 || j == 4) {
                     Rectangle rect = new Rectangle(0, 0, width_step, height_step);
-                    rect.setFill(Color.CORNFLOWERBLUE);
+                    //rect.setFill(Color.CORNFLOWERBLUE);
+                    rect.setFill(board_elements.get(ctr).getColor());
                     rect.setStroke(Color.BLACK);
                     StackPane stack = new StackPane();
-                    Text text = new Text(board_elements.get(ctr));
+
+                    Text text = new Text(board_elements.get(ctr).getDisplayName());
                     text.setStyle("-fx-font: 20 arial; -fx-text-fill: red;");
                     //text.setX(width_step * (i + 1) + text_margin_width);
                     //text.setY(height_step * (j + 1) + text_margin_height);
