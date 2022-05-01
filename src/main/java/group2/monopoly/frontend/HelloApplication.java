@@ -2,14 +2,19 @@ package group2.monopoly.frontend;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import group2.monopoly.frontend.Pawn.Pawn;
+
 public class HelloApplication extends Application {
+    private final int grid_count = 7;
     @Override
     public void start(Stage stage) throws IOException {
         int width = 800;
@@ -121,9 +126,19 @@ public class HelloApplication extends Application {
         });
 
 
-        BoardRectangles board_rectangles = new BoardRectangles(width, height, places);
+
+
+        BoardRectangles board_rectangles = new BoardRectangles(width, height, places, grid_count);
         board_rectangles.createRectangles();
-        Scene scene = new Scene(board_rectangles.getRects(), width, height);
+        System.out.println("pwd: " + System.getProperty("user.dir"));
+        Pawn pawn = new Pawn("", "file:src/main/java/group2/monopoly/frontend/pawn_ship.png", 0, this.grid_count, height, width);
+        Pawn pawn2 = new Pawn("", "file:src/main/java/group2/monopoly/frontend/pawn_shoe.png", 1, this.grid_count, height, width);
+
+        Group root = new Group();
+        root.getChildren().addAll(board_rectangles.getRects());
+        root.getChildren().add(pawn.draw());
+        root.getChildren().add(pawn2.draw());
+        Scene scene = new Scene(root, width, height);
         stage.setTitle("Monopoly");
         stage.setScene(scene);
         stage.show();

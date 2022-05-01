@@ -18,12 +18,14 @@ public class BoardRectangles {
     int width, height;
     int text_margin_width = 20;
     int text_margin_height = 30;
+    private int grid_count;
     List<BoardElement> board_elements = new ArrayList<>();
 
-    public BoardRectangles(int width, int height, List<List<String>> board_elements) {
+    public BoardRectangles(int width, int height, List<List<String>> board_elements, int grid_count) {
         rects = new Group();
         this.width = width;
         this.height = height;
+        this.grid_count = grid_count;
         for (List<String> list : board_elements) {
             if (list.get(0).equals("Property")) {
                 Property property = new Property(list.get(1));
@@ -55,8 +57,8 @@ public class BoardRectangles {
         // There is a 5x5 board that we will fit into the whole screen
         int i = 0;
         int j = 0;
-        int width_step = width / 7;
-        int height_step = height / 7;
+        int width_step = width / this.grid_count;
+        int height_step = height / this.grid_count;
         ArrayList<StackPane> stackPanes = new ArrayList<>();
         int ctr = 0;
         for (i = 0; i < 5; i++) {
@@ -82,7 +84,6 @@ public class BoardRectangles {
                     stack.setLayoutY(height_step * (j + 1));
 
                     rects.getChildren().add(stack);
-                    System.out.println("Rectangle added: " + i + " " + j);
                     ctr++;
 
                 }
