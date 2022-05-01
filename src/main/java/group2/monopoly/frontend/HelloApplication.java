@@ -1,9 +1,12 @@
 package group2.monopoly.frontend;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -125,19 +128,28 @@ public class HelloApplication extends Application {
             }
         });
 
-
-
-
         BoardRectangles board_rectangles = new BoardRectangles(width, height, places, grid_count);
         board_rectangles.createRectangles();
         System.out.println("pwd: " + System.getProperty("user.dir"));
         Pawn pawn = new Pawn("", "file:src/main/java/group2/monopoly/frontend/pawn_ship.png", 0, this.grid_count, height, width);
         Pawn pawn2 = new Pawn("", "file:src/main/java/group2/monopoly/frontend/pawn_shoe.png", 1, this.grid_count, height, width);
+        final int[] pawn2_pose = {0};
+        Button button = new Button("Test");
+        // when clicked to button, call pawn2.transition(pawn2_pose+1)
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                pawn2.transition(pawn2_pose[0] + 1);
+                pawn2_pose[0]++;
+                System.out.println("pawn2_pose: " + pawn2_pose[0]);
+            }
+        });
 
         Group root = new Group();
         root.getChildren().addAll(board_rectangles.getRects());
         root.getChildren().add(pawn.draw());
         root.getChildren().add(pawn2.draw());
+        root.getChildren().add(button);
         Scene scene = new Scene(root, width, height);
         stage.setTitle("Monopoly");
         stage.setScene(scene);

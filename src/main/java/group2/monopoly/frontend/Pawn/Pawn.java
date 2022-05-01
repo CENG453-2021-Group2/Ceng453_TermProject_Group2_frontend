@@ -1,8 +1,10 @@
 package group2.monopoly.frontend.Pawn;
 
+import javafx.animation.TranslateTransition;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,8 @@ public class Pawn {
 
     private final int image_height = 40;
 
+    private Group pawn_group;
+
     public Pawn(String owner, String png_path, int position_square, int grid_count, int res_height, int res_width) {
         this.owner = owner;
         this.png_path = png_path;
@@ -32,6 +36,7 @@ public class Pawn {
         this.height_step = res_height / grid_count;
         this.width_grid_center = width_step / 2 - image_height / 2;
         this.height_grid_center = height_step / 2 - image_height / 2;
+        pawn_group = new Group();
     }
 
     private List<Integer> getCoords(){
@@ -54,7 +59,8 @@ public class Pawn {
         return null;
     }
 
-    public Group draw() {
+    public Group draw(){
+        this.pawn_group.getChildren().clear();
         // draw the pawn from the png!
         Image pawn = new Image(png_path);
         ImageView pawn_view = new ImageView(pawn);
@@ -64,17 +70,38 @@ public class Pawn {
         pawn_view.setY(coords.get(1));
         pawn_view.setFitHeight(this.image_height);
         pawn_view.setPreserveRatio(true);
-
-        return new Group(pawn_view);
+        this.pawn_group.getChildren().add(pawn_view);
+        return this.pawn_group;
     }
 
-    /*
-    public void transition(int position_x, int position_y) {
+    public void transition(int new_square_position) {
         // execute a transition animation!
 
-        this.position_x = position_x;
-        this.position_y = position_y;
+        // get curr coords
+        List<Integer> curr_coords = getCoords();
+
+        // animate the pawn to the new coords!
+
+        this.position_square = new_square_position;
+        // get new coords
+        List<Integer> new_coords = getCoords();
+
+        Duration duration = Duration.millis(2500);
+        TranslateTransition translateTransition = new TranslateTransition(duration, this.pawn_group);
+        //translateTransition.setByX(curr_coords.get(0) - new_coords.get(0));
+        //translateTransition.setByY(curr_coords.get(1) - new_coords.get(1));
+
+        translateTransition.setByX(new_coords.get(0) - curr_coords.get(0));
+        translateTransition.setByY(new_coords.get(1) - curr_coords.get(1));
+
+
+        translateTransition.setAutoReverse(false);
+        translateTransition.play();
+
+        //this.draw();
     }
 
-     */
+
+
+
 }
