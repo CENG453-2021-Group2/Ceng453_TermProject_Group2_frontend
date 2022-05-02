@@ -9,6 +9,8 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import group2.monopoly.frontend.Utils.BoardToCoords;
+
 public class Pawn {
     private String owner;
     private String png_path;
@@ -20,6 +22,7 @@ public class Pawn {
     private int height_step;
     private int width_grid_center;
     private int height_grid_center;
+    private BoardToCoords board_to_coords;
 
     private final int image_height = 40;
 
@@ -37,26 +40,7 @@ public class Pawn {
         this.width_grid_center = width_step / 2 - image_height / 2;
         this.height_grid_center = height_step / 2 - image_height / 2;
         pawn_group = new Group();
-    }
-
-    private List<Integer> getCoords(){
-        int ctr = 0;
-        for (int i = 0; i < 5; i++) {
-            for (int j = 4; j > 0; j--) {
-                if (i == 0 || i == 4 || j == 0 || j == 4) {
-                    if (ctr == position_square) {
-                        int finalI = i;
-                        int finalJ = j;
-                        return new ArrayList<Integer>() {{
-                            add(width_step * (finalI + 1) + width_grid_center);
-                            add(height_step * (finalJ + 1) + height_grid_center);
-                        }};
-                    }
-                    ctr++;
-                }
-            }
-        }
-        return null;
+        board_to_coords = new BoardToCoords(res_width, res_height, grid_count);
     }
 
     public Group draw(){
@@ -64,7 +48,7 @@ public class Pawn {
         // draw the pawn from the png!
         Image pawn = new Image(png_path);
         ImageView pawn_view = new ImageView(pawn);
-        List<Integer> coords = getCoords();
+        List<Integer> coords = this.board_to_coords.getCoords(this.position_square);
         assert coords != null;
         pawn_view.setX(coords.get(0));
         pawn_view.setY(coords.get(1));
@@ -78,27 +62,23 @@ public class Pawn {
         // execute a transition animation!
 
         // get curr coords
-        List<Integer> curr_coords = getCoords();
+        List<Integer> curr_coords = this.board_to_coords.getCoords(this.position_square);
 
         // animate the pawn to the new coords!
 
         this.position_square = new_square_position;
         // get new coords
-        List<Integer> new_coords = getCoords();
+        List<Integer> new_coords = this.board_to_coords.getCoords(this.position_square);
 
-        Duration duration = Duration.millis(2500);
+        Duration duration = Duration.millis(1000);
         TranslateTransition translateTransition = new TranslateTransition(duration, this.pawn_group);
-        //translateTransition.setByX(curr_coords.get(0) - new_coords.get(0));
-        //translateTransition.setByY(curr_coords.get(1) - new_coords.get(1));
 
         translateTransition.setByX(new_coords.get(0) - curr_coords.get(0));
         translateTransition.setByY(new_coords.get(1) - curr_coords.get(1));
 
-
         translateTransition.setAutoReverse(false);
         translateTransition.play();
 
-        //this.draw();
     }
 
 

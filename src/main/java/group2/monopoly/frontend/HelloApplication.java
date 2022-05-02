@@ -30,17 +30,23 @@ public class HelloApplication extends Application {
         // mock
         places.add(new ArrayList<String>() {
             {
+                add("Start point"); // Property type
+                add(""); // property property 1
+            }
+        });
+        places.add(new ArrayList<String>() {
+            {
                 add("Jail/Just visiting"); // Property type
                 add(""); // property property 1
             }
         });
+
         places.add(new ArrayList<String>() {
             {
                 add("Income tax"); // Property type
                 add("50"); // property property 1, income tax amount
             }
         });
-
         places.add(new ArrayList<String>() {
             {
                 add("Railroad/Ferry"); // Property type
@@ -50,12 +56,6 @@ public class HelloApplication extends Application {
         places.add(new ArrayList<String>() {
             {
                 add("Railroad/Ferry"); // Property type
-                add(""); // property property 1
-            }
-        });
-        places.add(new ArrayList<String>() {
-            {
-                add("Start point"); // Property type
                 add(""); // property property 1
             }
         });
@@ -132,7 +132,7 @@ public class HelloApplication extends Application {
         board_rectangles.createRectangles();
         System.out.println("pwd: " + System.getProperty("user.dir"));
         Pawn pawn = new Pawn("", "file:src/main/java/group2/monopoly/frontend/pawn_ship.png", 0, this.grid_count, height, width);
-        Pawn pawn2 = new Pawn("", "file:src/main/java/group2/monopoly/frontend/pawn_shoe.png", 1, this.grid_count, height, width);
+        Pawn pawn2 = new Pawn("", "file:src/main/java/group2/monopoly/frontend/pawn_shoe.png", 0, this.grid_count, height, width);
         final int[] pawn2_pose = {0};
         Button button = new Button("Test");
         // when clicked to button, call pawn2.transition(pawn2_pose+1)
@@ -141,7 +141,6 @@ public class HelloApplication extends Application {
             public void handle(ActionEvent event) {
                 pawn2.transition(pawn2_pose[0] + 1);
                 pawn2_pose[0]++;
-                System.out.println("pawn2_pose: " + pawn2_pose[0]);
             }
         });
 
