@@ -11,4 +11,8 @@ public interface BoardElement {
     public String getDisplayName();
 
     public Color getColor();
+
+    public void placedPawn();
+
+    public void removedPawn();
 }

@@ -145,6 +145,8 @@ public class HelloApplication extends Application {
             @Override
             public void handle(ActionEvent event) {
                 player2.getPawn().transition(pawn2_pose[0] + 1);
+                board_rectangles.boardedToRect(pawn2_pose[0] + 1);
+                board_rectangles.unBoardedToRect(pawn2_pose[0]);
                 pawn2_pose[0]++;
             }
         });

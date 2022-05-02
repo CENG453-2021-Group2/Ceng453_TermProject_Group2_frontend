@@ -33,7 +33,6 @@ public class BoardRectangles {
         for (List<String> list : board_elements) {
             if (list.get(0).equals("Property")) {
                 Property property = new Property(list.get(1));
-                property.setColor(Color.CADETBLUE);
                 this.board_elements.add(property);
             }
             else if (list.get(0).equals("Income tax")) {
@@ -92,14 +91,27 @@ public class BoardRectangles {
 
 
         }
-
-
-
-
     }
 
     public Group getRects() {
         return rects;
+    }
+
+    public void boardedToRect(int index) {
+        System.out.println("Boarded to rect");
+        StackPane s = (StackPane) rects.getChildren().get(index);
+        Rectangle r = (Rectangle) s.getChildren().get(0);
+        board_elements.get(index).placedPawn();
+        System.out.println(board_elements.get(index).getColor());
+        r.setFill(board_elements.get(index).getColor());
+    }
+
+    public void unBoardedToRect(int index) {
+        System.out.println("Unboarded to rect");
+        StackPane s = (StackPane) rects.getChildren().get(index);
+        Rectangle r = (Rectangle) s.getChildren().get(0);
+        board_elements.get(index).removedPawn();
+        r.setFill(board_elements.get(index).getColor());
     }
 
 
