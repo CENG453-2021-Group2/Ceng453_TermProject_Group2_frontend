@@ -140,6 +140,7 @@ public class HelloApplication extends Application {
         players.add(player2);
         final int[] pawn2_pose = {0};
         Button button = new Button("Test");
+        board_rectangles.boardedToRect(0);
         // when clicked to button, call pawn2.transition(pawn2_pose+1)
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -158,9 +159,8 @@ public class HelloApplication extends Application {
         root.getChildren().add(button);
 
         // add player's special info
-        DisplayMoney display_money = new DisplayMoney(width, height, grid_count);
-        display_money.displayMoney(player2.getMoney());
-        root.getChildren().add(display_money.getGroup());
+        root.getChildren().add(player2.getMoneyDisplay());
+        root.getChildren().add(player2.getPropertiesDisplay());
 
 
         Scene scene = new Scene(root, width, height);
