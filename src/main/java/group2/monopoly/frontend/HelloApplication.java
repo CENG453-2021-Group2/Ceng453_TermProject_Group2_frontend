@@ -21,20 +21,24 @@ import group2.monopoly.frontend.Pawn.Pawn;
 public class HelloApplication extends Application {
     private final int grid_count = 7;
     private boolean in_game = false;
+    private boolean in_signup = false;
     Scene scene;
     Stage stage;
+    private final int width = 800;
+    private final int height = 600;
 
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
-        int width = 800;
-        int height = 600;
 
         if (in_game) {
             this.scene = new Scene(RenderGame.render(this), width, height);
         }
+        else if (in_signup) {
+            this.scene = new Scene(RenderSignUp.render(this, width, height), width, height);
+        }
         else {
-            this.scene = new Scene(RenderSignMenu.render(this), width, height);
+            this.scene = new Scene(RenderSignMenu.render(this, width, height), width, height);
         }
         stage.setTitle("Monopoly");
         stage.setScene(scene);
@@ -43,14 +47,23 @@ public class HelloApplication extends Application {
 
     public void startGame() {
         in_game = true;
+        in_signup = false;
         System.out.println("Starting game");
         this.scene.setRoot(RenderGame.render(this));
     }
 
     public void endGame() {
         in_game = false;
+        in_signup = true;
         System.out.println("Ending game");
-        this.scene.setRoot(RenderSignMenu.render(this));
+        this.scene.setRoot(RenderSignMenu.render(this, width, height));
+    }
+
+    public void startSignUp() {
+        in_game = false;
+        in_signup = true;
+        System.out.println("Starting sign up");
+        this.scene.setRoot(RenderSignUp.render(this, width, height));
     }
 
     public static void main(String[] args) {

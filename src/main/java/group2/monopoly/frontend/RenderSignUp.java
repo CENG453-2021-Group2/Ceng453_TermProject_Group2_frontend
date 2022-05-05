@@ -8,7 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class RenderSignMenu {
+public class RenderSignUp {
 
     private static final int field_width = 150;
     private static final int field_margin = 60;
@@ -16,7 +16,7 @@ public class RenderSignMenu {
 
     public static Group render(HelloApplication app, int width, int height) {
 
-        System.out.println("RenderSignMenu.render");
+        System.out.println("RenderSignUp");
 
         Group root = new Group();
 
@@ -42,24 +42,24 @@ public class RenderSignMenu {
         passwordInput.setLayoutX(width / 2 - field_width / 2);
         passwordInput.setLayoutY(passwordHeight + field_margin / 2);
 
-        Button signIn = new Button("Sign In");
-        signIn.setLayoutX(width / 2 - field_width / 2);
-        signIn.setLayoutY(passwordHeight + field_margin_margin + field_margin);
-        signIn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                app.startGame();;
+        int emailHeight = passwordHeight + field_margin_margin + field_margin;
+        Label email = new Label("Email");
+        email.setLayoutX(width / 2 - field_width / 2);
+        email.setLayoutY(emailHeight);
 
-            }
-        });
+        TextField emailInput = new TextField();
+        emailInput.setPrefWidth(field_width);
+        emailInput.setMaxWidth(field_width);
+        emailInput.setLayoutX(width / 2 - field_width / 2);
+        emailInput.setLayoutY(emailHeight + field_margin / 2);
 
         Button signUp = new Button("Sign Up");
         signUp.setLayoutX(width / 2 - field_width / 2);
-        signUp.setLayoutY(passwordHeight + field_margin_margin + field_margin + field_margin_margin + field_margin);
+        signUp.setLayoutY(emailHeight + field_margin_margin + field_margin + field_margin_margin + field_margin);
         signUp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                app.startSignUp();
+                app.endGame();
             }
         });
 
@@ -70,7 +70,9 @@ public class RenderSignMenu {
         root.getChildren().add(password);
         root.getChildren().add(passwordInput);
 
-        root.getChildren().add(signIn);
+        root.getChildren().add(email);
+        root.getChildren().add(emailInput);
+
         root.getChildren().add(signUp);
 
         return root;
