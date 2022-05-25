@@ -4,9 +4,12 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+
+import java.io.IOException;
 
 public class RenderSignMenu {
 
@@ -48,6 +51,14 @@ public class RenderSignMenu {
         signIn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                try {
+                    app.executeSignIn(userNameInput.getText(), passwordInput.getText());
+                } catch (IOException e) {
+                    Alert a = new Alert(Alert.AlertType.ERROR);
+                    a.setContentText("Could not sign in to user");
+                    a.show();
+                    return;
+                }
                 app.startGame();;
 
             }
@@ -55,11 +66,21 @@ public class RenderSignMenu {
 
         Button signUp = new Button("Sign Up");
         signUp.setLayoutX(width / 2 - field_width / 2);
-        signUp.setLayoutY(passwordHeight + field_margin_margin + field_margin + field_margin_margin + field_margin);
+        signUp.setLayoutY(passwordHeight + field_margin_margin + field_margin + field_margin);
         signUp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 app.startSignUp();
+            }
+        });
+
+        Button forgotPassword = new Button("Forgot Password");
+        forgotPassword.setLayoutX(width / 2 - field_width / 2);
+        forgotPassword.setLayoutY(passwordHeight + field_margin_margin + field_margin + field_margin + field_margin);
+        forgotPassword.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                app.startForgotPassword();
             }
         });
 
@@ -72,6 +93,7 @@ public class RenderSignMenu {
 
         root.getChildren().add(signIn);
         root.getChildren().add(signUp);
+        root.getChildren().add(forgotPassword);
 
         return root;
     }
