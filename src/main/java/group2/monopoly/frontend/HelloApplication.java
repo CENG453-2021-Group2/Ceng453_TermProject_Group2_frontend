@@ -19,6 +19,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import org.json.*;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -35,6 +37,8 @@ public class HelloApplication extends Application {
     Stage stage;
     private final int width = 800;
     private final int height = 600;
+
+    private String user_token = "";
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -65,6 +69,7 @@ public class HelloApplication extends Application {
         in_game = false;
         in_signup = true;
         System.out.println("Ending game");
+        user_token = "";
         this.scene.setRoot(RenderSignMenu.render(this, width, height));
     }
 
@@ -129,7 +134,7 @@ public class HelloApplication extends Application {
         os.write(postData.getBytes());
         os.flush();
 
-        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED || conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED && conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
             //System.out.println("Failed: HTTP error code: " + conn.getResponseCode());
             throw new RuntimeException("Failed: HTTP error code: " + conn.getResponseCode());
         }
@@ -139,8 +144,12 @@ public class HelloApplication extends Application {
         String output;
         System.out.println("Output from server ... \n");
         while ((output = br.readLine()) != null) {
-            System.out.println(output);
+            //System.out.println(output);
+            JSONObject jsonObject = new JSONObject(output);
+            user_token = jsonObject.getString("token");
+            System.out.println(user_token);
         }
+
 
         conn.disconnect();
 
