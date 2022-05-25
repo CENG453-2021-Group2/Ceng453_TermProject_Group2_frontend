@@ -33,6 +33,7 @@ public class HelloApplication extends Application {
     private final int grid_count = 7;
     private boolean in_game = false;
     private boolean in_signup = false;
+    private boolean in_forgot_password = false;
     Scene scene;
     Stage stage;
     private final int width = 800;
@@ -50,6 +51,9 @@ public class HelloApplication extends Application {
         else if (in_signup) {
             this.scene = new Scene(RenderSignUp.render(this, width, height), width, height);
         }
+        else if (in_forgot_password) {
+            this.scene = new Scene(RenderForgotPassword.render(this, width, height), width, height);
+        }
         else {
             this.scene = new Scene(RenderSignMenu.render(this, width, height), width, height);
         }
@@ -61,6 +65,7 @@ public class HelloApplication extends Application {
     public void startGame() {
         in_game = true;
         in_signup = false;
+        in_forgot_password = false;
         System.out.println("Starting game");
         this.scene.setRoot(RenderGame.render(this));
     }
@@ -68,6 +73,7 @@ public class HelloApplication extends Application {
     public void endGame() {
         in_game = false;
         in_signup = true;
+        in_forgot_password = false;
         System.out.println("Ending game");
         user_token = "";
         this.scene.setRoot(RenderSignMenu.render(this, width, height));
@@ -76,8 +82,17 @@ public class HelloApplication extends Application {
     public void startSignUp() {
         in_game = false;
         in_signup = true;
+        in_forgot_password = false;
         System.out.println("Starting sign up");
         this.scene.setRoot(RenderSignUp.render(this, width, height));
+    }
+
+    public void startForgotPassword() {
+        in_game = false;
+        in_signup = false;
+        in_forgot_password = true;
+        System.out.println("Starting forgot menu");
+        this.scene.setRoot(RenderForgotPassword.render(this, width, height));
     }
 
     public void executeSignUp(String username, String password, String confirmPassword, String email) throws IOException {
@@ -155,6 +170,38 @@ public class HelloApplication extends Application {
 
     }
 
+    public void executeForgotPassword(String identifier) throws IOException {
+        URL url = new URL("http://localhost:8080/api/auth/forgotPassword");
+
+        String postData = "{ \"identifier\": \"" + identifier + "\"}";
+        System.out.println("the post data is");
+        System.out.println(postData);
+
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setDoOutput(true);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+
+        OutputStream os = conn.getOutputStream();
+        os.write(postData.getBytes());
+        os.flush();
+
+        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED && conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            //System.out.println("Failed: HTTP error code: " + conn.getResponseCode());
+            throw new RuntimeException("Failed: HTTP error code: " + conn.getResponseCode());
+        }
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+        String output;
+        System.out.println("Output from server ... \n");
+        while ((output = br.readLine()) != null) {
+            System.out.println(output);
+        }
+
+
+        conn.disconnect();
+    }
     public static void main(String[] args) {
         launch();
     }
