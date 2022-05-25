@@ -4,9 +4,12 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+
+import java.io.IOException;
 
 public class RenderSignUp {
 
@@ -42,7 +45,18 @@ public class RenderSignUp {
         passwordInput.setLayoutX(width / 2 - field_width / 2);
         passwordInput.setLayoutY(passwordHeight + field_margin / 2);
 
-        int emailHeight = passwordHeight + field_margin_margin + field_margin;
+        int passwordHeight2 = passwordHeight + field_margin_margin + field_margin;
+        Label password2 = new Label("Password Confirmation");
+        password2.setLayoutX(width / 2 - field_width / 2);
+        password2.setLayoutY(passwordHeight2);
+
+        TextField passwordInput2 = new TextField();
+        passwordInput2.setPrefWidth(field_width);
+        passwordInput2.setMaxWidth(field_width);
+        passwordInput2.setLayoutX(width / 2 - field_width / 2);
+        passwordInput2.setLayoutY(passwordHeight2 + field_margin / 2);
+
+        int emailHeight = passwordHeight2 + field_margin_margin + field_margin;
         Label email = new Label("Email");
         email.setLayoutX(width / 2 - field_width / 2);
         email.setLayoutY(emailHeight);
@@ -59,6 +73,19 @@ public class RenderSignUp {
         signUp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                try {
+                    app.executeSignUp(userNameInput.getText(), passwordInput.getText(), passwordInput2.getText(), emailInput.getText());
+                    Alert a = new Alert(Alert.AlertType.INFORMATION);
+                    a.setContentText("Successfully created user!");
+                    a.show();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                catch (RuntimeException e) {
+                    Alert a = new Alert(Alert.AlertType.ERROR);
+                    a.setContentText("Could not create user");
+                    a.show();
+                }
                 app.endGame();
             }
         });
@@ -69,6 +96,9 @@ public class RenderSignUp {
 
         root.getChildren().add(password);
         root.getChildren().add(passwordInput);
+
+        root.getChildren().add(password2);
+        root.getChildren().add(passwordInput2);
 
         root.getChildren().add(email);
         root.getChildren().add(emailInput);
