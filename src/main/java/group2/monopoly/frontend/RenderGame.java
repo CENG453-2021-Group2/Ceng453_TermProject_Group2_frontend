@@ -249,8 +249,8 @@ public class RenderGame {
                 System.out.println(new_location);
                 pawn2_pose[0] = new_location;
 
-                ParallelTransition parallelTransition1 = null;
-                ParallelTransition parallelTransition2 = null;
+                ParallelTransition parallelTransition1 = new ParallelTransition();
+                ParallelTransition parallelTransition2 = new ParallelTransition();
 
                 if (playerPlaceChange) {
                     parallelTransition1 = new ParallelTransition(
