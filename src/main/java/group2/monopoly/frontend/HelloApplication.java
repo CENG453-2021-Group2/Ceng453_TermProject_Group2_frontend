@@ -41,6 +41,8 @@ public class HelloApplication extends Application {
 
     private String user_token = "";
 
+    private String curr_game_name = "";
+
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
@@ -67,6 +69,12 @@ public class HelloApplication extends Application {
         in_signup = false;
         in_forgot_password = false;
         System.out.println("Starting game");
+        try {
+            executeCreateGame("1");
+        } catch (IOException e) {
+            return;
+        }
+        curr_game_name = "1";
         this.scene.setRoot(RenderGame.render(this));
     }
 
@@ -199,6 +207,39 @@ public class HelloApplication extends Application {
             System.out.println(output);
         }
 
+
+        conn.disconnect();
+    }
+
+    public void executeCreateGame(String gameName) throws IOException {
+        URL url = new URL("http://localhost:8080/api/game");
+
+        String postData = "{ \"name\": \"" + gameName + "\"}";
+        System.out.println("the post data is");
+        System.out.println(postData);
+
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setDoOutput(true);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Authorization", "Bearer " + user_token);
+
+        OutputStream os = conn.getOutputStream();
+        os.write(postData.getBytes());
+        os.flush();
+
+        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED && conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            //System.out.println("Failed: HTTP error code: " + conn.getResponseCode());
+            throw new RuntimeException("Failed: HTTP error code: " + conn.getResponseCode());
+        }
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+        String output;
+        System.out.println("Output from server ... \n");
+        while ((output = br.readLine()) != null) {
+            System.out.println(output);
+        }
 
         conn.disconnect();
     }
