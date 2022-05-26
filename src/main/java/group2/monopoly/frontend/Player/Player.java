@@ -3,6 +3,7 @@ package group2.monopoly.frontend.Player;
 import group2.monopoly.frontend.Pawn.Pawn;
 import javafx.scene.Group;
 import javafx.scene.text.Text;
+import org.json.JSONArray;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class Player {
     private int board_grid_count;
     private DisplayMoney displayMoney;
 
+    private String properties;
     private DisplayProperties displayProperties;
 
     public Player(String name, int money, String pawn_path, int board_width, int board_height, int board_grid_count) {
@@ -30,11 +32,19 @@ public class Player {
         this.displayMoney = new DisplayMoney(board_width, board_height, board_grid_count);
 
         this.displayProperties = new DisplayProperties(board_width, board_height, board_grid_count);
-        this.displayProperties.updateProperties(List.of(new String[]{"asad"}));
+        this.properties = "";
     }
 
     public Pawn getPawn() {
         return pawn;
+    }
+
+    public void updateProperties(JSONArray properties) {
+        String s = "";
+        for (int i = 0; i < properties.length(); i++) {
+            s = s + properties.get(i) + "\n";
+        }
+        this.displayProperties.updateProperties(List.of(new String[]{s}));
     }
 
     public int getMoney() {

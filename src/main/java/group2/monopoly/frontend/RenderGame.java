@@ -195,17 +195,20 @@ public class RenderGame {
                         System.out.println("players json is");
                         System.out.println(players_json);
                         int new_location = players_json.getJSONObject(0).getInt("location");
+                        player2.updateProperties((JSONArray) players_json.getJSONObject(0).get("ownedPurchasables"));
                         System.out.println("Neww location for player!!!!!!");
                         System.out.println(new_location);
-                        player2.getPawn().transition(new_location);
-                        board_rectangles.boardedToRect(new_location);
-                        board_rectangles.unBoardedToRect(pawn2_pose[0]);
-                        pawn2_pose[0] = 16 - new_location;
                         int new_location_for_robot = players_json.getJSONObject(0).getInt("location");
                         player.getPawn().transition(new_location_for_robot);
-                        board_rectangles.boardedToRect(new_location_for_robot);
+                        player2.getPawn().transition(new_location);
+
                         board_rectangles.unBoardedToRect(pawn1_pose[0]);
-                        pawn1_pose[0] = 16 - new_location_for_robot;
+                        board_rectangles.unBoardedToRect(pawn2_pose[0]);
+                        board_rectangles.boardedToRect(new_location_for_robot);
+                        board_rectangles.boardedToRect(new_location);
+
+                        pawn2_pose[0] = new_location;
+                        pawn1_pose[0] = new_location_for_robot;
 
                     } catch (IOException e) {
                         throw new RuntimeException(e);
