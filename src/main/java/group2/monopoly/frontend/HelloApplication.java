@@ -43,12 +43,14 @@ public class HelloApplication extends Application {
 
     private String curr_game_name = "";
 
+    private JSONObject gameTableConfigurationJSON = null;
+
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
 
         if (in_game) {
-            this.scene = new Scene(RenderGame.render(this), width, height);
+            this.scene = new Scene(RenderGame.render(this, gameTableConfigurationJSON), width, height);
         }
         else if (in_signup) {
             this.scene = new Scene(RenderSignUp.render(this, width, height), width, height);
@@ -69,13 +71,18 @@ public class HelloApplication extends Application {
         in_signup = false;
         in_forgot_password = false;
         System.out.println("Starting game");
+        String game_string = "";
         try {
-            executeCreateGame("1");
+            game_string = executeCreateGame("1");
         } catch (IOException e) {
             return;
         }
         curr_game_name = "1";
-        this.scene.setRoot(RenderGame.render(this));
+        JSONObject gameStateJSON = new JSONObject(game_string);
+        JSONObject gameTableConfiguration = gameStateJSON.getJSONObject("gameTableConfiguration");
+        this.gameTableConfigurationJSON = gameTableConfiguration;
+
+        this.scene.setRoot(RenderGame.render(this, gameTableConfiguration));
     }
 
     public void endGame() {
@@ -211,7 +218,7 @@ public class HelloApplication extends Application {
         conn.disconnect();
     }
 
-    public void executeCreateGame(String gameName) throws IOException {
+    public String executeCreateGame(String gameName) throws IOException {
         URL url = new URL("http://localhost:8080/api/game");
 
         String postData = "{ \"name\": \"" + gameName + "\"}";
@@ -239,9 +246,10 @@ public class HelloApplication extends Application {
         System.out.println("Output from server ... \n");
         while ((output = br.readLine()) != null) {
             System.out.println(output);
+            conn.disconnect();
+            return output;
         }
-
-        conn.disconnect();
+        return null;
     }
 
     public String stepInGame(boolean will_buy) throws IOException {
