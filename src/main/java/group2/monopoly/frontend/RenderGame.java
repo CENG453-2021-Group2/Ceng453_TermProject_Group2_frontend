@@ -8,6 +8,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class RenderGame {
         int width = 800;
         int height = 600;
         List<List<String>> places = new ArrayList<>();
+        boolean first_step = true;
         // income tax random
         // railroad/ferry 4 random
         // 8 properties random
@@ -132,11 +135,11 @@ public class RenderGame {
         System.out.println("pwd: " + System.getProperty("user.dir"));
         Player player = new Player("alp", 1500, "file:src/main/java/group2/monopoly/frontend/pawn_ship.png", width, height, grid_count);
         Player player2 = new Player("deniz", 1500, "file:src/main/java/group2/monopoly/frontend/pawn_shoe.png", width, height, grid_count);
-        List<Player> players = new ArrayList<>();
-        players.add(player);
-        players.add(player2);
+        final List<Player>[] players = new List[]{new ArrayList<>()};
+        players[0].add(player);
+        players[0].add(player2);
         final int[] pawn2_pose = {0};
-        Button button = new Button("Test");
+        Button button = new Button("Step");
         board_rectangles.boardedToRect(0);
         // when clicked to button, call pawn2.transition(pawn2_pose+1)
         button.setOnAction(new EventHandler<ActionEvent>() {
@@ -145,7 +148,20 @@ public class RenderGame {
                 player2.getPawn().transition(pawn2_pose[0] + 1);
                 board_rectangles.boardedToRect(pawn2_pose[0] + 1);
                 board_rectangles.unBoardedToRect(pawn2_pose[0]);
-                pawn2_pose[0]++;
+                if (first_step) {
+                    try {
+                        String gameState = app.stepInGame(false);
+                        JSONObject gameStateJSON = new JSONObject(gameState);
+                        JSONArray players_json = gameStateJSON.getJSONArray("players");
+                        int new_location = players_json.getJSONObject(0).getInt("location");
+                        System.out.println("Neww location for player!!!!!!");
+                        System.out.println(new_location);
+                        pawn2_pose[0] = new_location;
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                //pawn2_pose[0]++;
             }
         });
 

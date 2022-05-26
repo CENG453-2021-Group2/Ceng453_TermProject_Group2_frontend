@@ -243,6 +243,42 @@ public class HelloApplication extends Application {
 
         conn.disconnect();
     }
+
+    public String stepInGame(boolean will_buy) throws IOException {
+        URL url = new URL("http://localhost:8080/api/game/1");
+
+        String postData = "{ \"buy\": \"" + will_buy + "\"}";
+        System.out.println("the post data is");
+        System.out.println(postData);
+
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setDoOutput(true);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Authorization", "Bearer " + user_token);
+
+        OutputStream os = conn.getOutputStream();
+        os.write(postData.getBytes());
+        os.flush();
+
+        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED && conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            //System.out.println("Failed: HTTP error code: " + conn.getResponseCode());
+            throw new RuntimeException("Failed: HTTP error code: " + conn.getResponseCode());
+        }
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+        String output = "";
+        System.out.println("Output from server ... \n");
+        while ((output = br.readLine()) != null) {
+            System.out.println(output);
+            return output;
+        }
+
+        conn.disconnect();
+        return null;
+    }
+
     public static void main(String[] args) {
         launch();
     }
