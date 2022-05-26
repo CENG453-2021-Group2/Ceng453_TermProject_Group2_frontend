@@ -58,7 +58,7 @@ public class Pawn {
         return this.pawn_group;
     }
 
-    public void transition(int new_square_position) {
+    public TranslateTransition transition(int new_square_position) {
         // execute a transition animation!
 
         // get curr coords
@@ -70,14 +70,15 @@ public class Pawn {
         // get new coords
         List<Integer> new_coords = this.board_to_coords.getCoords(this.position_square);
 
-        Duration duration = Duration.millis(100);
+        Duration duration = Duration.millis(500);
         TranslateTransition translateTransition = new TranslateTransition(duration, this.pawn_group);
 
         translateTransition.setByX(new_coords.get(0) - curr_coords.get(0));
         translateTransition.setByY(new_coords.get(1) - curr_coords.get(1));
 
         translateTransition.setAutoReverse(false);
-        translateTransition.play();
+        //translateTransition.play();
+        return translateTransition;
 
     }
 

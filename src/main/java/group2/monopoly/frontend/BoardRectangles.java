@@ -1,6 +1,7 @@
 package group2.monopoly.frontend;
 
 import group2.monopoly.frontend.BoardParts.*;
+import javafx.animation.FillTransition;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import group2.monopoly.frontend.Utils.BoardToCoords;
+import javafx.util.Duration;
 
 
 public class BoardRectangles {
@@ -97,21 +99,27 @@ public class BoardRectangles {
         return rects;
     }
 
-    public void boardedToRect(int index) {
+    public FillTransition boardedToRect(int index) {
         System.out.println("Boarded to rect");
         StackPane s = (StackPane) rects.getChildren().get(index);
         Rectangle r = (Rectangle) s.getChildren().get(0);
+        Color beforeColor = board_elements.get(index).getColor();
         board_elements.get(index).placedPawn();
-        System.out.println(board_elements.get(index).getColor());
-        r.setFill(board_elements.get(index).getColor());
+        Color afterColor = board_elements.get(index).getColor();
+        return new FillTransition(Duration.millis(200), r, beforeColor, afterColor);
+        //System.out.println(board_elements.get(index).getColor());
+        //r.setFill(board_elements.get(index).getColor());
     }
 
-    public void unBoardedToRect(int index) {
+    public FillTransition unBoardedToRect(int index) {
         System.out.println("Unboarded to rect");
         StackPane s = (StackPane) rects.getChildren().get(index);
         Rectangle r = (Rectangle) s.getChildren().get(0);
+        Color beforeColor = board_elements.get(index).getColor();
         board_elements.get(index).removedPawn();
-        r.setFill(board_elements.get(index).getColor());
+        Color afterColor = board_elements.get(index).getColor();
+        return new FillTransition(Duration.millis(200), r, beforeColor, afterColor);
+        //r.setFill(board_elements.get(index).getColor());
     }
 
 

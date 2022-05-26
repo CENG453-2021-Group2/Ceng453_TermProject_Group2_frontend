@@ -16,7 +16,6 @@ public class Player {
     private int board_height;
     private int board_grid_count;
     private DisplayMoney displayMoney;
-
     private String properties;
     private DisplayProperties displayProperties;
 
@@ -45,6 +44,10 @@ public class Player {
             s = s + properties.get(i) + "\n";
         }
         this.displayProperties.updateProperties(List.of(new String[]{s}));
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
     }
 
     public int getMoney() {
