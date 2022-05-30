@@ -29,7 +29,7 @@ public class RenderGame {
     public static Group render(HelloApplication app, JSONObject gameTableConfiguration, int width, int height) {
         int grid_count = 7;
         List<List<String>> places = new ArrayList<>();
-        boolean first_step = true;
+        final boolean[] first_step = {true};
         // income tax random
         // railroad/ferry 4 random
         // 8 properties random
@@ -208,7 +208,7 @@ public class RenderGame {
             @Override
             public void handle(ActionEvent event) {
                 String gameState;
-                if (first_step) {
+                if (first_step[0]) {
                     try {
                         gameState = app.stepInGame(false);
                     } catch (IOException e) {
@@ -216,11 +216,14 @@ public class RenderGame {
                     }
                 } else {
                     try {
+                        System.out.println("Buy box is");
+                        System.out.println(checkBox.isSelected());
                         gameState = app.stepInGame(checkBox.isSelected());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 }
+                first_step[0] = false;
                 checkBox.setSelected(false);
                 JSONObject gameStateJSON = new JSONObject(gameState);
                 JSONArray players_json = gameStateJSON.getJSONArray("players");
