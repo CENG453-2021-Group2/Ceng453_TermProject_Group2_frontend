@@ -50,7 +50,7 @@ public class HelloApplication extends Application {
         this.stage = stage;
 
         if (in_game) {
-            this.scene = new Scene(RenderGame.render(this, gameTableConfigurationJSON), width, height);
+            this.scene = new Scene(RenderGame.render(this, gameTableConfigurationJSON, width, height), width, height);
         }
         else if (in_signup) {
             this.scene = new Scene(RenderSignUp.render(this, width, height), width, height);
@@ -82,7 +82,7 @@ public class HelloApplication extends Application {
         JSONObject gameTableConfiguration = gameStateJSON.getJSONObject("gameTableConfiguration");
         this.gameTableConfigurationJSON = gameTableConfiguration;
 
-        this.scene.setRoot(RenderGame.render(this, gameTableConfiguration));
+        this.scene.setRoot(RenderGame.render(this, gameTableConfiguration, this.width, this.height));
     }
 
     public void endGame() {

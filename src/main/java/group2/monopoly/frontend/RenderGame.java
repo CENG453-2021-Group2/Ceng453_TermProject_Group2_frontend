@@ -5,9 +5,12 @@ import javafx.animation.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.json.JSONArray;
@@ -22,10 +25,8 @@ import java.util.concurrent.TimeUnit;
 
 public class RenderGame {
 
-    public static Group render(HelloApplication app, JSONObject gameTableConfiguration) {
+    public static Group render(HelloApplication app, JSONObject gameTableConfiguration, int width, int height) {
         int grid_count = 7;
-        int width = 800;
-        int height = 600;
         List<List<String>> places = new ArrayList<>();
         boolean first_step = true;
         // income tax random
@@ -174,6 +175,12 @@ public class RenderGame {
             }
         });
 
+        // who plays text
+        Text whoPlaysText = new Text("Human plays!");
+        whoPlaysText.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: red;");
+        whoPlaysText.setX(width/2-40);
+        whoPlaysText.setY(50);
+
         BoardRectangles board_rectangles = new BoardRectangles(width, height, places, grid_count);
         board_rectangles.createRectangles();
         System.out.println("pwd: " + System.getProperty("user.dir"));
@@ -250,7 +257,32 @@ public class RenderGame {
                 pawn2_pose[0] = new_location;
 
                 ParallelTransition parallelTransition1 = new ParallelTransition();
+                //parallelTransition1.setOnFinished(actionEvent -> whoPlaysText.setText("Robot plays!")); // Not working currently!!!
                 ParallelTransition parallelTransition2 = new ParallelTransition();
+                //parallelTransition2.setOnFinished(actionEvent -> whoPlaysText.setText("Human plays!")); // Not working currently!!!
+
+                FadeTransition fadeInRobot = new FadeTransition(Duration.millis(1), whoPlaysText);
+                fadeInRobot.setFromValue(0.0);
+                fadeInRobot.setToValue(1.0);
+
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(1), whoPlaysText);
+                fadeOut.setFromValue(1.0);
+                fadeOut.setToValue(0.0);
+
+                fadeOut.setOnFinished(event2 -> whoPlaysText.setText("Robot Plays"));
+
+
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(1), whoPlaysText);
+                fadeIn.setFromValue(0.0);
+                fadeIn.setToValue(1.0);
+
+                PauseTransition pause = new PauseTransition(Duration.millis(300));
+                pause.setOnFinished(event3 -> whoPlaysText.setText("Human plays"));
+
+                parallelTransition2.setOnFinished(event1 -> whoPlaysText.setText("Human plays"));
+
+
+
 
                 if (playerPlaceChange) {
                     parallelTransition1 = new ParallelTransition(
@@ -268,8 +300,12 @@ public class RenderGame {
                 }
 
                 SequentialTransition sequentialTransition = new SequentialTransition(
+                        fadeInRobot,
                         parallelTransition1,
-                        parallelTransition2
+                        fadeOut,
+                        fadeIn,
+                        parallelTransition2,
+                        pause
                 );
                 sequentialTransition.play();
 
@@ -297,7 +333,7 @@ public class RenderGame {
         // add player's special info
         root.getChildren().add(player2.getMoneyDisplay());
         root.getChildren().add(player2.getPropertiesDisplay());
-
+        root.getChildren().add(whoPlaysText);
 
         return root;
     }
