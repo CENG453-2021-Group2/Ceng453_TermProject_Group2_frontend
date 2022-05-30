@@ -70,7 +70,7 @@ public class Pawn {
         // get new coords
         List<Integer> new_coords = this.board_to_coords.getCoords(this.position_square);
 
-        Duration duration = Duration.millis(500);
+        Duration duration = Duration.millis(100);
         TranslateTransition translateTransition = new TranslateTransition(duration, this.pawn_group);
 
         translateTransition.setByX(new_coords.get(0) - curr_coords.get(0));

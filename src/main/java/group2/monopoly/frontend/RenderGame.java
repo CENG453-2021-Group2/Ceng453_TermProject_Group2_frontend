@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -178,7 +179,7 @@ public class RenderGame {
         // who plays text
         Text whoPlaysText = new Text("Human plays!");
         whoPlaysText.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: red;");
-        whoPlaysText.setX(width/2-40);
+        whoPlaysText.setX(width/2-100);
         whoPlaysText.setY(50);
 
         BoardRectangles board_rectangles = new BoardRectangles(width, height, places, grid_count);
@@ -193,6 +194,15 @@ public class RenderGame {
         int[] pawn1_pose = {0};
         Button button = new Button("Step");
         board_rectangles.boardedToRect(0);
+
+        Text buyText = new Text("Do you want to buy the property?");
+        buyText.setStyle("-fx-font-size: 14px;");
+        buyText.setLayoutX(60);
+        buyText.setLayoutY(15);
+        CheckBox checkBox = new CheckBox();
+        checkBox.setLayoutX(100);
+        checkBox.setLayoutY(30);
+
         // when clicked to button, call pawn2.transition(pawn2_pose+1)
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -206,11 +216,12 @@ public class RenderGame {
                     }
                 } else {
                     try {
-                        gameState = app.stepInGame(false);
+                        gameState = app.stepInGame(checkBox.isSelected());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 }
+                checkBox.setSelected(false);
                 JSONObject gameStateJSON = new JSONObject(gameState);
                 JSONArray players_json = gameStateJSON.getJSONArray("players");
                 System.out.println("players json is");
@@ -291,7 +302,6 @@ public class RenderGame {
 
                 fadeOut.setOnFinished(event2 -> whoPlaysText.setText("Robot Plays"));
 
-
                 FadeTransition fadeIn = new FadeTransition(Duration.millis(1), whoPlaysText);
                 fadeIn.setFromValue(0.0);
                 fadeIn.setToValue(1.0);
@@ -300,9 +310,6 @@ public class RenderGame {
                 pause.setOnFinished(event3 -> whoPlaysText.setText("Human plays"));
 
                 parallelTransition2.setOnFinished(event1 -> whoPlaysText.setText("Human plays"));
-
-
-
 
                 if (playerPlaceChange) {
                     parallelTransition1 = new ParallelTransition(
@@ -354,6 +361,8 @@ public class RenderGame {
         root.getChildren().add(player2.getMoneyDisplay());
         root.getChildren().add(player2.getPropertiesDisplay());
         root.getChildren().add(whoPlaysText);
+        root.getChildren().add(buyText);
+        root.getChildren().add(checkBox);
 
         return root;
     }
