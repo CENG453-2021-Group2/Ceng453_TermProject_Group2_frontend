@@ -229,7 +229,16 @@ public class RenderGame {
 
 
                 // Then, continue with the robot's move
-                TranslateTransition playerTransition = player.getPawn().transition(new_location_for_robot);
+                SequentialTransition playerTransition = new SequentialTransition();
+                int j = pawn1_pose[0];
+                while (j != new_location_for_robot) {
+                    j++;
+                    j = j % 16;
+                    playerTransition.getChildren().add(player.getPawn().transition(j));
+                }
+                if (new_location_for_robot == 12) {
+                    playerTransition.getChildren().add(player.getPawn().transition(4));
+                }
 
                 FillTransition unboardPlayerRect = board_rectangles.unBoardedToRect(pawn1_pose[0]);
                 FillTransition boardPlayerRect = board_rectangles.boardedToRect(new_location_for_robot);
@@ -248,7 +257,18 @@ public class RenderGame {
                 if (new_location != pawn2_pose[0]) {
                     player2PlaceChange = true;
                 }
-                TranslateTransition player2Transition = player2.getPawn().transition(new_location);
+
+                SequentialTransition player2Transition = new SequentialTransition();
+                j = pawn2_pose[0];
+                while (j != new_location) {
+                    j++;
+                    j = j % 16;
+                    player2Transition.getChildren().add(player2.getPawn().transition(j));
+                }
+                if (new_location == 12) {
+                    player2Transition.getChildren().add(player2.getPawn().transition(4));
+                }
+                //TranslateTransition player2Transition = player2.getPawn().transition(new_location);
 
                 FillTransition unboardPlayer2Rect = board_rectangles.unBoardedToRect(pawn2_pose[0]);
                 FillTransition boardPlayer2Rect = board_rectangles.boardedToRect(new_location);
