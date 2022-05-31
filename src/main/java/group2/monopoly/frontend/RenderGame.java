@@ -46,14 +46,14 @@ public class RenderGame {
             portIndicesArr.add(portIndices.getInt(i));
         }
         List<String> boardPlaceNames = new ArrayList<String>(List.of(
-                "Naz",
-                "Çatı",
-                "Pizzacı\n Altan",
-                "Susam",
-                "Piyata",
-                "Central",
+                "Yemekhane",
                 "Balıkçı",
-                "Yemekhane"
+                "Central",
+                "Piyata",
+                "Susam",
+                "Pizzacı\n Altan",
+                "Çatı",
+                "Naz"
         ));
 
         // mock
@@ -159,7 +159,7 @@ public class RenderGame {
 
         // now arrange them!
         for (int i = 0; i < portIndicesArr.size(); i++) {
-            places.set(portIndicesArr.get(i), new ArrayList<String>() {
+            places.set(16 - portIndicesArr.get(i), new ArrayList<String>() {
                 {
                     add("Railroad/Ferry");
                     add("100$");
@@ -172,10 +172,10 @@ public class RenderGame {
         // now arrange them!
         for (int i = 0; i < propertyIndicesArr.size(); i++) {
             int finalI = i;
-            places.set(propertyIndicesArr.get(i), new ArrayList<String>() {
+            places.set(16 - propertyIndicesArr.get(i), new ArrayList<String>() {
                 {
                     add(boardPlaceNames.get(place_index[0]));
-                    add(String.valueOf((400-50* finalI)));
+                    add(String.valueOf((50 * place_index[0] + 100)));
                     place_index[0]++;
                 }
             });
@@ -243,7 +243,13 @@ public class RenderGame {
                 System.out.println(players_json);
 
                 // First update the player's purchase, if any
-                player2.updateProperties((JSONArray) players_json.getJSONObject(0).get("ownedPurchasables"));
+                List<String> player2OwnedPurchasables = CreatePropertyDisplay.findNames(
+                        (JSONArray) players_json.getJSONObject(0).get("ownedPurchasables"),
+                        (JSONArray) gameTableConfiguration.get("propertyIndices"),
+                        (JSONArray) gameTableConfiguration.get("portIndices"),
+                        boardPlaceNames
+                        );
+                player2.updateProperties(player2OwnedPurchasables);
                 int new_location_for_robot = 16 - players_json.getJSONObject(1).getInt("location");
                 boolean playerPlaceChange = false;
                 if (new_location_for_robot != pawn1_pose[0]) {
@@ -257,6 +263,10 @@ public class RenderGame {
                 // Then, continue with the robot's move
                 SequentialTransition playerTransition = new SequentialTransition();
                 int j = pawn1_pose[0];
+                // Workaround until the bug is fixed
+                if (new_location_for_robot == 16) {
+                    new_location_for_robot = 0;
+                }
                 while (j != new_location_for_robot) {
                     j--;
                     j += 16; // because mod operator does not necessarily convert -1 to 15
@@ -287,6 +297,10 @@ public class RenderGame {
 
                 SequentialTransition player2Transition = new SequentialTransition();
                 j = pawn2_pose[0];
+                // Workaround until the bug is fixed
+                if (new_location == 16) {
+                    new_location = 0;
+                }
                 while (j != new_location) {
                     j--;
                     j += 16; // because mod operator does not necessarily convert -1 to 15
@@ -317,16 +331,16 @@ public class RenderGame {
                 fadeOut.setFromValue(1.0);
                 fadeOut.setToValue(0.0);
 
-                fadeOut.setOnFinished(event2 -> whoPlaysText.setText("Robot Plays"));
+                fadeOut.setOnFinished(event2 -> whoPlaysText.setText("Human Plays"));
 
                 FadeTransition fadeIn = new FadeTransition(Duration.millis(1), whoPlaysText);
                 fadeIn.setFromValue(0.0);
                 fadeIn.setToValue(1.0);
 
                 PauseTransition pause = new PauseTransition(Duration.millis(300));
-                pause.setOnFinished(event3 -> whoPlaysText.setText("Human plays"));
+                pause.setOnFinished(event3 -> whoPlaysText.setText("Robot plays"));
 
-                parallelTransition2.setOnFinished(event1 -> whoPlaysText.setText("Human plays"));
+                parallelTransition2.setOnFinished(event1 -> whoPlaysText.setText("Robot plays"));
 
                 PauseTransition pauseBetweenPlayers = new PauseTransition(Duration.seconds(2));
                 PauseTransition pauseBeforeFirstMove = new PauseTransition(Duration.millis(500));
