@@ -9,15 +9,16 @@ public class Property implements BoardElement{
     private final Color occupied_color = Color.web("#6891C3");
     private boolean is_occupied;
 
-    public Property(String price){
+    private String name;
+
+    public Property(String name, String price){
         this.price = price;
+        this.name = name;
         this.is_occupied = false;
     }
 
     @Override
-    public String getType() {
-        return "Property";
-    }
+    public String getType() {return "Property"; }
 
     @Override
     public String getName() {
@@ -26,7 +27,7 @@ public class Property implements BoardElement{
 
     @Override
     public String getDisplayName() {
-        return "Property\n$" + price;
+        return this.name + "\n$" + price;
     }
 
     public Color getColor(){

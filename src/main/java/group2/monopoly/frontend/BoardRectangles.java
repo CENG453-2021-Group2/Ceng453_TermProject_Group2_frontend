@@ -32,28 +32,25 @@ public class BoardRectangles {
         this.height = height;
         this.grid_count = grid_count;
         boardToCoords = new BoardToCoords(width, height, grid_count);
-        for (List<String> list : board_elements) {
-            if (list.get(0).equals("Property")) {
-                Property property = new Property(list.get(1));
-                this.board_elements.add(property);
-            }
-            else if (list.get(0).equals("Income tax")) {
+        for (List<String> board_element : board_elements) {
+            if (board_element.get(0).equals("Income tax")) {
                 this.board_elements.add(new IncomeTax());
             }
-            else if (list.get(0).equals("Go to jail")) {
+            else if (board_element.get(0).equals("Go to jail")) {
                 this.board_elements.add(new GoToJail());
             }
-            else if (list.get(0).equals("Railroad/Ferry")) {
+            else if (board_element.get(0).equals("Railroad/Ferry")) {
                 this.board_elements.add(new RailroadFerry());
             }
-            else if (list.get(0).equals("Jail/Just visiting")) {
+            else if (board_element.get(0).equals("Jail/Just visiting")) {
                 this.board_elements.add(new Jail());
             }
-            else if (list.get(0).equals("Start point")) {
+            else if (board_element.get(0).equals("Start point")) {
                 this.board_elements.add(new StartPoint());
             }
-            else {
-                System.out.println("Error: " + list.get(0) + " is not a valid board element");
+            else { // It must be a property!
+                Property property = new Property(board_element.get(0), board_element.get(1));
+                this.board_elements.add(property);
             }
         }
     }
@@ -77,7 +74,7 @@ public class BoardRectangles {
             StackPane stack = new StackPane();
 
             Text text = new Text(board_elements.get(k).getDisplayName());
-            text.setStyle("-fx-font: 20 arial; -fx-text-fill: red;");
+            text.setStyle("-fx-font: 19 arial; -fx-text-fill: red;");
             //text.setX(width_step * (i + 1) + text_margin_width);
             //text.setY(height_step * (j + 1) + text_margin_height);
             stack.getChildren().add(rect);

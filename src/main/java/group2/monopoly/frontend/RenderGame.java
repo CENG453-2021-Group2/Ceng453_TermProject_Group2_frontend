@@ -45,6 +45,16 @@ public class RenderGame {
         for (int i = 0; i < portIndices.length(); i++) {
             portIndicesArr.add(portIndices.getInt(i));
         }
+        List<String> boardPlaceNames = new ArrayList<String>(List.of(
+                "Naz",
+                "Çatı",
+                "Pizzacı\n Altan",
+                "Susam",
+                "Piyata",
+                "Central",
+                "Balıkçı",
+                "Yemekhane"
+        ));
 
         // mock
         places.add(new ArrayList<String>() {
@@ -55,7 +65,7 @@ public class RenderGame {
         });
         places.add(new ArrayList<String>() {
             {
-                add("Jail/Just visiting"); // Property type
+                add("Go to jail"); // Property type
                 add(""); // property property 1
             }
         });
@@ -74,14 +84,14 @@ public class RenderGame {
         });
         places.add(new ArrayList<String>() {
             {
-                add("Jail/Just visiting"); // Property type
+                add("Go to jail"); // Property type
                 add("-100"); // property property 1
             }
         });
         places.add(new ArrayList<String>() {
             {
                 add("Property"); // Property type
-                add("-100$"); // property property 1
+                add("-1"); // property property 1
             }
         });
         places.add(new ArrayList<String>() {
@@ -94,49 +104,49 @@ public class RenderGame {
         places.add(new ArrayList<String>() {
             {
                 add("Property"); // Property type
+                add("-2"); // property property 1 / cost of property
+            }
+        });
+        places.add(new ArrayList<String>() {
+            {
+                add("Property"); // Property type
+                add("-3"); // property property 1 / cost of property
+            }
+        });
+        places.add(new ArrayList<String>() {
+            {
+                add("Property"); // Property type
+                add("-4"); // property property 1 / cost of property
+            }
+        });
+        places.add(new ArrayList<String>() {
+            {
+                add("Jail/Just visiting"); // Property type
+                add("100"); // property property 1 / cost of property
+            }
+        });
+        places.add(new ArrayList<String>() {
+            {
+                add("Jail/Just visiting"); // Property type
+                add("100"); // property property 1 / cost of property
+            }
+        });
+        places.add(new ArrayList<String>() {
+            {
+                add("Jail/Just visiting"); // Property type
                 add("100"); // property property 1 / cost of property
             }
         });
         places.add(new ArrayList<String>() {
             {
                 add("Property"); // Property type
-                add("100"); // property property 1 / cost of property
+                add("-5"); // property property 1 / cost of property
             }
         });
         places.add(new ArrayList<String>() {
             {
                 add("Property"); // Property type
-                add("100"); // property property 1 / cost of property
-            }
-        });
-        places.add(new ArrayList<String>() {
-            {
-                add("Go to jail"); // Property type
-                add("100"); // property property 1 / cost of property
-            }
-        });
-        places.add(new ArrayList<String>() {
-            {
-                add("Go to jail"); // Property type
-                add("100"); // property property 1 / cost of property
-            }
-        });
-        places.add(new ArrayList<String>() {
-            {
-                add("Go to jail"); // Property type
-                add("100"); // property property 1 / cost of property
-            }
-        });
-        places.add(new ArrayList<String>() {
-            {
-                add("Property"); // Property type
-                add("100"); // property property 1 / cost of property
-            }
-        });
-        places.add(new ArrayList<String>() {
-            {
-                add("Property"); // Property type
-                add("100"); // property property 1 / cost of property
+                add("-6"); // property property 1 / cost of property
             }
         });
 
@@ -149,7 +159,7 @@ public class RenderGame {
 
         // now arrange them!
         for (int i = 0; i < portIndicesArr.size(); i++) {
-            places.set(16 - portIndicesArr.get(i), new ArrayList<String>() {
+            places.set(portIndicesArr.get(i), new ArrayList<String>() {
                 {
                     add("Railroad/Ferry");
                     add("100$");
@@ -158,13 +168,15 @@ public class RenderGame {
         }
 
         int max_price = 400;
+        final int[] place_index = {0};
         // now arrange them!
         for (int i = 0; i < propertyIndicesArr.size(); i++) {
             int finalI = i;
-            places.set(16 - propertyIndicesArr.get(i), new ArrayList<String>() {
+            places.set(propertyIndicesArr.get(i), new ArrayList<String>() {
                 {
-                    add("Property");
+                    add(boardPlaceNames.get(place_index[0]));
                     add(String.valueOf((400-50* finalI)));
+                    place_index[0]++;
                 }
             });
         }
@@ -232,7 +244,7 @@ public class RenderGame {
 
                 // First update the player's purchase, if any
                 player2.updateProperties((JSONArray) players_json.getJSONObject(0).get("ownedPurchasables"));
-                int new_location_for_robot = players_json.getJSONObject(1).getInt("location");
+                int new_location_for_robot = 16 - players_json.getJSONObject(1).getInt("location");
                 boolean playerPlaceChange = false;
                 if (new_location_for_robot != pawn1_pose[0]) {
                     playerPlaceChange = true;
@@ -246,12 +258,13 @@ public class RenderGame {
                 SequentialTransition playerTransition = new SequentialTransition();
                 int j = pawn1_pose[0];
                 while (j != new_location_for_robot) {
-                    j++;
+                    j--;
+                    j += 16; // because mod operator does not necessarily convert -1 to 15
                     j = j % 16;
                     playerTransition.getChildren().add(player.getPawn().transition(j));
                 }
-                if (new_location_for_robot == 12) {
-                    playerTransition.getChildren().add(player.getPawn().transition(4));
+                if (new_location_for_robot == 4) {
+                    playerTransition.getChildren().add(player.getPawn().transition(12));
                 }
 
                 FillTransition unboardPlayerRect = board_rectangles.unBoardedToRect(pawn1_pose[0]);
@@ -266,7 +279,7 @@ public class RenderGame {
 
 
                 // update player position
-                int new_location = players_json.getJSONObject(0).getInt("location");
+                int new_location = 16 - players_json.getJSONObject(0).getInt("location");
                 boolean player2PlaceChange = false;
                 if (new_location != pawn2_pose[0]) {
                     player2PlaceChange = true;
@@ -275,12 +288,13 @@ public class RenderGame {
                 SequentialTransition player2Transition = new SequentialTransition();
                 j = pawn2_pose[0];
                 while (j != new_location) {
-                    j++;
+                    j--;
+                    j += 16; // because mod operator does not necessarily convert -1 to 15
                     j = j % 16;
                     player2Transition.getChildren().add(player2.getPawn().transition(j));
                 }
-                if (new_location == 12) {
-                    player2Transition.getChildren().add(player2.getPawn().transition(4));
+                if (new_location == 4) {
+                    player2Transition.getChildren().add(player2.getPawn().transition(12));
                 }
                 //TranslateTransition player2Transition = player2.getPawn().transition(new_location);
 
@@ -314,6 +328,9 @@ public class RenderGame {
 
                 parallelTransition2.setOnFinished(event1 -> whoPlaysText.setText("Human plays"));
 
+                PauseTransition pauseBetweenPlayers = new PauseTransition(Duration.seconds(2));
+                PauseTransition pauseBeforeFirstMove = new PauseTransition(Duration.millis(500));
+
                 if (playerPlaceChange) {
                     parallelTransition1 = new ParallelTransition(
                             unboardPlayerRect,
@@ -330,10 +347,12 @@ public class RenderGame {
                 }
 
                 SequentialTransition sequentialTransition = new SequentialTransition(
+                        pauseBeforeFirstMove,
                         fadeInRobot,
                         parallelTransition1,
                         fadeOut,
                         fadeIn,
+                        pauseBetweenPlayers,
                         parallelTransition2,
                         pause
                 );
