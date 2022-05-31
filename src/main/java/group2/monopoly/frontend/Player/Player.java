@@ -3,7 +3,6 @@ package group2.monopoly.frontend.Player;
 import group2.monopoly.frontend.Pawn.Pawn;
 import javafx.scene.Group;
 import javafx.scene.text.Text;
-import org.json.JSONArray;
 
 import java.util.List;
 
@@ -18,6 +17,8 @@ public class Player {
     private DisplayMoney displayMoney;
     private String properties;
     private DisplayProperties displayProperties;
+
+    private Text moneyGroup;
 
     public Player(String name, int money, String pawn_path, int board_width, int board_height, int board_grid_count) {
         this.name = name;
@@ -38,9 +39,9 @@ public class Player {
         return pawn;
     }
 
-    public void updateProperties(JSONArray properties) {
+    public void updateProperties(List<String> properties) {
         String s = "";
-        for (int i = 0; i < properties.length(); i++) {
+        for (int i = 0; i < properties.size(); i++) {
             s = s + properties.get(i) + "\n";
         }
         this.displayProperties.updateProperties(List.of(new String[]{s}));
@@ -48,15 +49,22 @@ public class Player {
 
     public void setMoney(int money) {
         this.money = money;
+        System.out.println("the player's money is");
+        System.out.println(this.money);
+        this.moneyGroup.setText("$" + String.valueOf(this.money));
+
     }
 
     public int getMoney() {
-        return money;
+        System.out.println("the player's money get is");
+        System.out.println(this.money);
+        return this.money;
     }
 
     public Text getMoneyDisplay() {
         displayMoney.displayMoney(this.money);
-        return displayMoney.getGroup();
+        this.moneyGroup = displayMoney.getGroup();
+        return this.moneyGroup;
     }
 
     public Text getPropertiesDisplay() {
