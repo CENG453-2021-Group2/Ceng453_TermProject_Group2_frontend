@@ -18,20 +18,23 @@ public class Player {
     private String properties;
     private DisplayProperties displayProperties;
 
+    private boolean is_robot;
+
     private Text moneyGroup;
 
-    public Player(String name, int money, String pawn_path, int board_width, int board_height, int board_grid_count) {
+    public Player(String name, int money, String pawn_path, int board_width, int board_height, int board_grid_count, boolean is_robot) {
         this.name = name;
         this.money = money;
         this.position = 0;
         this.board_grid_count = board_grid_count;
         this.board_width = board_width;
         this.board_height = board_height;
+        this.is_robot = is_robot;
 
         this.pawn = new Pawn(name, pawn_path, 0, board_grid_count, board_height, board_width);
-        this.displayMoney = new DisplayMoney(board_width, board_height, board_grid_count);
+        this.displayMoney = new DisplayMoney(board_width, board_height, board_grid_count, this.is_robot);
 
-        this.displayProperties = new DisplayProperties(board_width, board_height, board_grid_count);
+        this.displayProperties = new DisplayProperties(board_width, board_height, board_grid_count, this.is_robot);
         this.properties = "";
     }
 

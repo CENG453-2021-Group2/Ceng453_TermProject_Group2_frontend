@@ -26,13 +26,8 @@ import java.util.concurrent.TimeUnit;
 
 public class RenderGame {
 
-    public static Group render(HelloApplication app, JSONObject gameTableConfiguration, int width, int height) {
-        int grid_count = 7;
-        List<List<String>> places = new ArrayList<>();
-        final boolean[] first_step = {true};
-        // income tax random
-        // railroad/ferry 4 random
-        // 8 properties random
+    private static List<List<String>> prepareInitialPlacesList (JSONObject gameTableConfiguration, List<String> boardPlaceNames) {
+        List<List<String>> places = new ArrayList<>();// mock
 
         int incomeTaxIndex = gameTableConfiguration.getInt("incomeTaxIndex");
         JSONArray propertyIndices = gameTableConfiguration.getJSONArray("propertyIndices");
@@ -45,18 +40,7 @@ public class RenderGame {
         for (int i = 0; i < portIndices.length(); i++) {
             portIndicesArr.add(portIndices.getInt(i));
         }
-        List<String> boardPlaceNames = new ArrayList<String>(List.of(
-                "Yemekhane",
-                "Balıkçı",
-                "Central",
-                "Piyata",
-                "Susam",
-                "Pizzacı\n Altan",
-                "Çatı",
-                "Naz"
-        ));
 
-        // mock
         places.add(new ArrayList<String>() {
             {
                 add("Start point"); // Property type
@@ -188,6 +172,24 @@ public class RenderGame {
             }
         });
 
+        return places;
+    }
+
+    public static Group render(HelloApplication app, JSONObject gameTableConfiguration, int width, int height) {
+        int grid_count = 7;
+        final boolean[] first_step = {true};
+        List<String> boardPlaceNames = new ArrayList<String>(List.of(
+                "Yemekhane",
+                "Balıkçı",
+                "Central",
+                "Piyata",
+                "Susam",
+                "Pizzacı\n Altan",
+                "Çatı",
+                "Naz"
+        ));
+        List<List<String>> places = prepareInitialPlacesList(gameTableConfiguration, boardPlaceNames);
+
         // who plays text
         Text whoPlaysText = new Text("Human plays!");
         whoPlaysText.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: red;");
@@ -197,8 +199,8 @@ public class RenderGame {
         BoardRectangles board_rectangles = new BoardRectangles(width, height, places, grid_count);
         board_rectangles.createRectangles();
         System.out.println("pwd: " + System.getProperty("user.dir"));
-        Player player = new Player("alp", 1500, "file:src/main/java/group2/monopoly/frontend/pawn_ship.png", width, height, grid_count);
-        Player player2 = new Player("deniz", 1500, "file:src/main/java/group2/monopoly/frontend/pawn_shoe.png", width, height, grid_count);
+        Player player = new Player("alp", 1500, "file:src/main/java/group2/monopoly/frontend/pawn_ship.png", width, height, grid_count, true);
+        Player player2 = new Player("deniz", 1500, "file:src/main/java/group2/monopoly/frontend/pawn_shoe.png", width, height, grid_count, false);
         final List<Player>[] players = new List[]{new ArrayList<>()};
         players[0].add(player);
         players[0].add(player2);
@@ -285,7 +287,19 @@ public class RenderGame {
 
 
                 // TODO: Update the robot's properties
+                // First update the player's purchase, if any
+                List<String> playerOwnedPurchasables = CreatePropertyDisplay.findNames(
+                        (JSONArray) players_json.getJSONObject(1).get("ownedPurchasables"),
+                        (JSONArray) gameTableConfiguration.get("propertyIndices"),
+                        (JSONArray) gameTableConfiguration.get("portIndices"),
+                        boardPlaceNames
+                );
+                player.updateProperties(playerOwnedPurchasables);
+
+
                 // TODO: Update the robot's money
+                player.setMoney(players_json.getJSONObject(1).getInt("money"));
+
 
 
                 // update player position
@@ -395,7 +409,9 @@ public class RenderGame {
 
         // add player's special info
         root.getChildren().add(player2.getMoneyDisplay());
+        root.getChildren().add(player.getMoneyDisplay());
         root.getChildren().add(player2.getPropertiesDisplay());
+        root.getChildren().add(player.getPropertiesDisplay());
         root.getChildren().add(whoPlaysText);
         root.getChildren().add(buyText);
         root.getChildren().add(checkBox);
