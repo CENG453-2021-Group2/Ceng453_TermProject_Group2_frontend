@@ -2,32 +2,59 @@ package group2.monopoly.frontend;
 
 import group2.monopoly.frontend.Player.Player;
 import javafx.animation.*;
-import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import javafx.event.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 public class RenderGame {
+
+    private static boolean checkIfCanBuyProperty(JSONObject gameStateJSON) {
+        JSONArray players_json = gameStateJSON.getJSONArray("players");
+        JSONObject player_json = players_json.getJSONObject(0);
+        JSONObject player2_json = players_json.getJSONObject(1);
+        JSONObject gameTableConfiguration = gameStateJSON.getJSONObject("gameTableConfiguration");
+        int incomeTax = gameTableConfiguration.getInt("incomeTaxIndex");
+
+        int curr_location = player_json.getInt("location");
+
+        // check If we own it
+        JSONArray our_properties = player_json.getJSONArray("ownedPurchasables");
+        for(int i = 0; i < our_properties.length(); i++) {
+            int property = our_properties.getInt(i);
+            if (curr_location == property) {
+                return false;
+            }
+        }
+
+        // check if the other player owns it
+        JSONArray robot_properties = player2_json.getJSONArray("ownedPurchasables");
+        for(int i = 0; i < robot_properties.length(); i++) {
+            int property = robot_properties.getInt(i);
+            if (curr_location == property) {
+                return false;
+            }
+        }
+
+        // check if it was income tax, or other special places
+        if (curr_location == incomeTax || curr_location == 4 || curr_location == 12 || curr_location == 0) {
+            return false;
+        }
+
+        return true;
+    }
 
     private static List<List<String>> prepareInitialPlacesList (JSONObject gameTableConfiguration, List<String> boardPlaceNames) {
         List<List<String>> places = new ArrayList<>();// mock
@@ -399,7 +426,9 @@ public class RenderGame {
                 );
                 sequentialTransition.setOnFinished(event7 -> {
                     button.setDisable(false);
-                    checkBox.setDisable(false);
+                    if (checkIfCanBuyProperty(gameStateJSON)) {
+                        checkBox.setDisable(false);
+                    }
                 });
                 sequentialTransition.play();
 
