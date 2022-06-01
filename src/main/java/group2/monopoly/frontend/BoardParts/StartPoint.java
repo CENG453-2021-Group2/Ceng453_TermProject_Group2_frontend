@@ -3,6 +3,10 @@ package group2.monopoly.frontend.BoardParts;
 import group2.monopoly.frontend.BoardParts.BoardElement;
 import javafx.scene.paint.Color;
 
+/**
+ * This implements the start point element in the board.
+ *
+ */
 public class StartPoint implements BoardElement{
 
     private final Color empty_color = Color.web("#DAEAF6");
@@ -13,14 +17,12 @@ public class StartPoint implements BoardElement{
         this.is_occupied = false;
     }
 
+    /**
+     * @return Always returns "Start point"
+     */
     @Override
     public String getType() {
         return "Start point";
-    }
-
-    @Override
-    public String getName() {
-        return null;
     }
 
     @Override

@@ -3,7 +3,12 @@ package group2.monopoly.frontend.BoardParts;
 import group2.monopoly.frontend.BoardParts.BoardElement;
 import javafx.scene.paint.Color;
 
+/**
+ * This implements the go to jail element in the board.
+ *
+ */
 public class GoToJail implements BoardElement{
+
 
     private final Color empty_color = Color.web("#DAEAF6");
     private final Color occupied_color = Color.web("#7EC5CF");
@@ -13,14 +18,12 @@ public class GoToJail implements BoardElement{
         this.is_occupied = false;
     }
 
+    /**
+     * @return Always returns "Go to jail"
+     */
     @Override
     public String getType() {
         return "Go to jail";
-    }
-
-    @Override
-    public String getName() {
-        return null;
     }
 
     @Override

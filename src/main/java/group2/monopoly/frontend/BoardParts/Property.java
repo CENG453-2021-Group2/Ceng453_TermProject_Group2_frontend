@@ -3,7 +3,12 @@ package group2.monopoly.frontend.BoardParts;
 import group2.monopoly.frontend.BoardParts.BoardElement;
 import javafx.scene.paint.Color;
 
+/**
+ * This implements the property element in the board.
+ *
+ */
 public class Property implements BoardElement{
+
     private String price;
     private final Color empty_color = Color.web("#809BCE");
     private final Color occupied_color = Color.web("#6891C3");
@@ -17,13 +22,11 @@ public class Property implements BoardElement{
         this.is_occupied = false;
     }
 
+    /**
+     * @return Always returns "Property"
+     */
     @Override
     public String getType() {return "Property"; }
-
-    @Override
-    public String getName() {
-        return null;
-    }
 
     @Override
     public String getDisplayName() {
