@@ -7,8 +7,13 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.json.JSONArray;
@@ -250,6 +255,37 @@ public class RenderGame {
         CheckBox checkBox = new CheckBox();
         checkBox.setLayoutX(100);
         checkBox.setLayoutY(30);
+
+        boolean cheat = false;
+        app.scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            final KeyCombination keyCombination = new KeyCodeCombination(KeyCode.DIGIT9, KeyCombination.CONTROL_ANY);
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyCombination.match(keyEvent)) {
+                    System.out.println("Pressed cheat!");
+
+                    // send the player to income tax index
+                    int incomeTaxIndex = gameTableConfiguration.getInt("incomeTaxIndex");
+                    TranslateTransition playerTransition = player2.getPawn().transition(16 - incomeTaxIndex);
+                    int beforeMoney = player2.getMoney();
+                    playerTransition.setOnFinished(event10 -> {
+                        player2.setMoney(player2.getMoney() - 10000000);
+                    });
+
+                    playerTransition.play();
+
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("You lost!");
+                    String s = new String();
+                    s = "Final money: ";
+                    alert.setHeaderText(s + String.valueOf(beforeMoney - 10000000));
+                    app.endGame();
+                    alert.showAndWait();
+
+                }
+            }
+
+        });
 
         // when clicked to button, call pawn2.transition(pawn2_pose+1)
         //button.disableProperty().bind(stepButtonBooleanBinding);
