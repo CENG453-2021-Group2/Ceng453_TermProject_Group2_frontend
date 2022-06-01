@@ -3,6 +3,9 @@ package group2.monopoly.frontend;
 import group2.monopoly.frontend.Player.Player;
 import javafx.animation.*;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -190,6 +193,10 @@ public class RenderGame {
         ));
         List<List<String>> places = prepareInitialPlacesList(gameTableConfiguration, boardPlaceNames);
 
+        final boolean[] stepButtonBoolean = new boolean[1];
+        stepButtonBoolean[0] = false;
+        BooleanBinding stepButtonBooleanBinding = Bindings.createBooleanBinding(() -> stepButtonBoolean[0]);
+
         // who plays text
         Text whoPlaysText = new Text("Human plays!");
         whoPlaysText.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: red;");
@@ -218,9 +225,12 @@ public class RenderGame {
         checkBox.setLayoutY(30);
 
         // when clicked to button, call pawn2.transition(pawn2_pose+1)
+        //button.disableProperty().bind(stepButtonBooleanBinding);
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                button.setDisable(true);
+                checkBox.setDisable(true);
                 String gameState;
                 if (first_step[0]) {
                     try {
@@ -356,8 +366,8 @@ public class RenderGame {
 
                 parallelTransition2.setOnFinished(event1 -> whoPlaysText.setText("Robot plays"));
 
-                PauseTransition pauseBetweenPlayers = new PauseTransition(Duration.seconds(2));
-                PauseTransition pauseBeforeFirstMove = new PauseTransition(Duration.millis(500));
+                PauseTransition pauseBetweenPlayers = new PauseTransition(Duration.seconds(1));
+                PauseTransition pauseBeforeFirstMove = new PauseTransition(Duration.millis(200));
 
                 if (playerPlaceChange) {
                     parallelTransition1 = new ParallelTransition(
@@ -384,7 +394,14 @@ public class RenderGame {
                         parallelTransition2,
                         pause
                 );
+                sequentialTransition.setOnFinished(event7 -> {
+                    button.setDisable(false);
+                    checkBox.setDisable(false);
+                });
                 sequentialTransition.play();
+
+
+
 
             }
         });
