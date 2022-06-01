@@ -1,5 +1,6 @@
 package group2.monopoly.frontend.Player;
 
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.util.List;
@@ -21,9 +22,11 @@ public class DisplayProperties {
         this.property_group.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: red;");
         if (this.is_left) {
             property_group.setX(this.width - this.width / this.grid_count);
+            this.property_group.setFill(Color.rgb(75,134,115));
         }
         else {
             property_group.setX(0);
+            this.property_group.setFill(Color.rgb(255,140,140));
         }
         property_group.setY(this.height / 3);
         System.out.println("Display property");

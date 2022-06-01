@@ -3,18 +3,18 @@ package group2.monopoly.frontend;
 import group2.monopoly.frontend.BoardParts.*;
 import javafx.animation.FillTransition;
 import javafx.scene.Group;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import group2.monopoly.frontend.Utils.BoardToCoords;
 import javafx.util.Duration;
+import org.json.JSONArray;
 
 
 public class BoardRectangles {
@@ -117,6 +117,22 @@ public class BoardRectangles {
         Color afterColor = board_elements.get(index).getColor();
         return new FillTransition(Duration.millis(200), r, beforeColor, afterColor);
         //r.setFill(board_elements.get(index).getColor());
+    }
+
+    public void updateRectTexts(JSONArray player1_own, JSONArray player2_own) {
+        System.out.println("updateRectTexts");
+        System.out.println(player1_own);
+        for (int i = 0; i < player1_own.length(); i++) {
+            StackPane s = (StackPane) this.getRects().getChildren().get(16 - player1_own.getInt(i));
+            Text t = (Text) s.getChildren().get(1);
+            t.setFill(Color.rgb(255,140,140));
+        }
+
+        for (int i = 0; i < player2_own.length(); i++) {
+            StackPane s = (StackPane) this.getRects().getChildren().get(16 - player1_own.getInt(i));
+            Text t = (Text) s.getChildren().get(1);
+            t.setFill(Color.rgb(75,134,115));
+        }
     }
 
 

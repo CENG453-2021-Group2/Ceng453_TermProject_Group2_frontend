@@ -429,10 +429,12 @@ public class RenderGame {
                     if (checkIfCanBuyProperty(gameStateJSON)) {
                         checkBox.setDisable(false);
                     }
+                    board_rectangles.updateRectTexts(
+                            (JSONArray) players_json.getJSONObject(0).get("ownedPurchasables"),
+                            (JSONArray) players_json.getJSONObject(1).get("ownedPurchasables")
+                    );
                 });
                 sequentialTransition.play();
-
-
 
 
             }

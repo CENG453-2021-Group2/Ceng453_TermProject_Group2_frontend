@@ -1,6 +1,7 @@
 package group2.monopoly.frontend.Player;
 
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import group2.monopoly.frontend.Utils.BoardToCoords;
@@ -29,9 +30,11 @@ public class DisplayMoney {
         this.money_group.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: red;");
         if (this.is_left) {
             money_group.setX(this.width - this.width / this.grid_count);
+            this.money_group.setFill(Color.rgb(75,134,115));
         }
         else {
             money_group.setX(0);
+            this.money_group.setFill(Color.rgb(255,140,140));
         }
         money_group.setY(this.height / 3-70);
     }
