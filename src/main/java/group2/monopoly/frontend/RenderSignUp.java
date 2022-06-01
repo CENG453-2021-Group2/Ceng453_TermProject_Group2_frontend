@@ -4,10 +4,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.io.IOException;
 
@@ -39,7 +36,7 @@ public class RenderSignUp {
         password.setLayoutX(width / 2 - field_width / 2);
         password.setLayoutY(passwordHeight);
 
-        TextField passwordInput = new TextField();
+        PasswordField passwordInput = new PasswordField();
         passwordInput.setPrefWidth(field_width);
         passwordInput.setMaxWidth(field_width);
         passwordInput.setLayoutX(width / 2 - field_width / 2);
@@ -50,7 +47,7 @@ public class RenderSignUp {
         password2.setLayoutX(width / 2 - field_width / 2);
         password2.setLayoutY(passwordHeight2);
 
-        TextField passwordInput2 = new TextField();
+        PasswordField passwordInput2 = new PasswordField();
         passwordInput2.setPrefWidth(field_width);
         passwordInput2.setMaxWidth(field_width);
         passwordInput2.setLayoutX(width / 2 - field_width / 2);
