@@ -362,12 +362,14 @@ public class RenderGame {
                 fadeIn.setToValue(1.0);
 
                 PauseTransition pause = new PauseTransition(Duration.millis(300));
-                pause.setOnFinished(event3 -> whoPlaysText.setText("Robot plays"));
 
                 parallelTransition2.setOnFinished(event1 -> whoPlaysText.setText("Robot plays"));
 
-                PauseTransition pauseBetweenPlayers = new PauseTransition(Duration.seconds(1));
-                PauseTransition pauseBeforeFirstMove = new PauseTransition(Duration.millis(200));
+                PauseTransition pauseBetweenPlayers = new PauseTransition(Duration.millis(500));
+                PauseTransition pauseBeforeFirstMove = new PauseTransition(Duration.millis(100));
+                PauseTransition pauseAfterRobot = new PauseTransition(Duration.millis(600));
+                pauseBeforeFirstMove.setOnFinished(event8 -> whoPlaysText.setText("Robot plays"));
+                PauseTransition pauseAfterBeforeFirstMove = new PauseTransition(Duration.seconds(1));
 
                 if (playerPlaceChange) {
                     parallelTransition1 = new ParallelTransition(
@@ -388,6 +390,7 @@ public class RenderGame {
                         pauseBeforeFirstMove,
                         fadeInRobot,
                         parallelTransition1,
+                        pauseAfterRobot,
                         fadeOut,
                         fadeIn,
                         pauseBetweenPlayers,
