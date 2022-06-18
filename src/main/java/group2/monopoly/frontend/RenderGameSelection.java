@@ -48,7 +48,15 @@ public class RenderGameSelection {
             Integer id = game.getInt("id");
             table.getItems().add(id.toString());
         }
-        final Integer[] last_game_id = {games[0].getJSONObject(games[0].length() - 1).getInt(("id"))};
+        final Integer[] last_game_id = new Integer[1];
+        System.out.println("length of games is");
+        System.out.println(games.length);
+        if (games[0].length() == 0) {
+            last_game_id[0] = 0;
+        }
+        else {
+            last_game_id[0] = new Integer(games[0].getJSONObject(games[0].length()-1).getInt(("id")));
+        }
 
         Button createGame = new Button("Create Game");
         createGame.setLayoutX(width/2 - 100);
@@ -63,7 +71,12 @@ public class RenderGameSelection {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                last_game_id[0] = games[0].getJSONObject(games[0].length() - 1).getInt(("id"));
+                if (games[0].length() == 0) {
+                    last_game_id[0] = 0;
+                }
+                else {
+                    last_game_id[0] = new Integer(games[0].getJSONObject(games[0].length()-1).getInt(("id")));
+                }
                 String next_game_id = new Integer(last_game_id[0] + 1).toString();
                 try {
                     app.executeCreateGame(next_game_id);
@@ -108,6 +121,7 @@ public class RenderGameSelection {
                 String id = idInput.getText();
                 try {
                     app.gameTableConfigurationJSON = app.executeGetGame(id).getJSONObject("gameTableConfiguration");
+                    app.gameJSON = app.executeGetGame(id);
                     app.curr_game_name = id;
                     app.startGame();
                 } catch (IOException e) {

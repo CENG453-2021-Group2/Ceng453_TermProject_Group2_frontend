@@ -47,12 +47,14 @@ public class HelloApplication extends Application {
 
     public JSONObject gameTableConfigurationJSON = null;
 
+    public JSONObject gameJSON = null;
+
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
 
         if (in_game) {
-            this.scene = new Scene(RenderGame.render(this, gameTableConfigurationJSON, width, height), width, height);
+            this.scene = new Scene(RenderGame.render(this, gameTableConfigurationJSON, this.gameJSON, width, height), width, height);
         }
         else if (in_signup) {
             this.scene = new Scene(RenderSignUp.render(this, width, height), width, height);
@@ -83,13 +85,7 @@ public class HelloApplication extends Application {
             return;
         }
 
-        /*
-        JSONObject gameStateJSON = new JSONObject(game_string);
-        JSONObject gameTableConfiguration = gameStateJSON.getJSONObject("gameTableConfiguration");
-        this.gameTableConfigurationJSON = gameTableConfiguration;
-
-         */
-        this.scene.setRoot(RenderGame.render(this, this.gameTableConfigurationJSON, this.width, this.height));
+        this.scene.setRoot(RenderGame.render(this, this.gameTableConfigurationJSON, this.gameJSON, this.width, this.height));
     }
 
     public void endGame() {

@@ -210,7 +210,12 @@ public class RenderGame {
         return places;
     }
 
-    public static Group render(HelloApplication app, JSONObject gameTableConfiguration, int width, int height) {
+    public static Group render(HelloApplication app, JSONObject gameTableConfiguration, JSONObject gameJSON, int width, int height) {
+        System.out.println("got render game render");
+        System.out.println(gameJSON.toString());
+        JSONObject player1JSON = gameJSON.getJSONArray("players").getJSONObject(0);
+        JSONObject player2JSON = gameJSON.getJSONArray("players").getJSONObject(1);
+
         int grid_count = 7;
         final boolean[] first_step = {true};
         List<String> boardPlaceNames = new ArrayList<String>(List.of(
@@ -238,11 +243,25 @@ public class RenderGame {
         BoardRectangles board_rectangles = new BoardRectangles(width, height, places, grid_count);
         board_rectangles.createRectangles();
         System.out.println("pwd: " + System.getProperty("user.dir"));
-        Player player = new Player("alp", 1500, "file:src/main/java/group2/monopoly/frontend/pawn_ship.png", width, height, grid_count, true);
-        Player player2 = new Player("deniz", 1500, "file:src/main/java/group2/monopoly/frontend/pawn_shoe.png", width, height, grid_count, false);
+        Player player = new Player("alp", player1JSON.getInt("money"), "file:src/main/java/group2/monopoly/frontend/pawn_ship.png", width, height, grid_count, true);
+        Player player2 = new Player("deniz", player2JSON.getInt("money"), "file:src/main/java/group2/monopoly/frontend/pawn_shoe.png", width, height, grid_count, false);
         final List<Player>[] players = new List[]{new ArrayList<>()};
         players[0].add(player);
         players[0].add(player2);
+        List<String> player1OwnedPurchasables = CreatePropertyDisplay.findNames(
+                (JSONArray) player1JSON.get("ownedPurchasables"),
+                (JSONArray) gameTableConfiguration.get("propertyIndices"),
+                (JSONArray) gameTableConfiguration.get("portIndices"),
+                boardPlaceNames
+        );
+        player.updateProperties(player1OwnedPurchasables);
+        List<String> player2OwnedPurchasables = CreatePropertyDisplay.findNames(
+                (JSONArray) player2JSON.get("ownedPurchasables"),
+                (JSONArray) gameTableConfiguration.get("propertyIndices"),
+                (JSONArray) gameTableConfiguration.get("portIndices"),
+                boardPlaceNames
+        );
+        player2.updateProperties(player2OwnedPurchasables);
         final int[] pawn2_pose = {0};
         int[] pawn1_pose = {0};
         Button button = new Button("Step");
