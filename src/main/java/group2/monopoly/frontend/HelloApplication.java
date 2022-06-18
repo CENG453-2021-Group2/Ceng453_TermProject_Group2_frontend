@@ -34,6 +34,8 @@ public class HelloApplication extends Application {
     private boolean in_game = false;
     private boolean in_signup = false;
     private boolean in_forgot_password = false;
+
+    private boolean in_game_selection = false;
     Scene scene;
     Stage stage;
     private final int width = 800;
@@ -41,9 +43,9 @@ public class HelloApplication extends Application {
 
     private String user_token = "";
 
-    private String curr_game_name = "";
+    public String curr_game_name = "";
 
-    private JSONObject gameTableConfigurationJSON = null;
+    public JSONObject gameTableConfigurationJSON = null;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -58,6 +60,9 @@ public class HelloApplication extends Application {
         else if (in_forgot_password) {
             this.scene = new Scene(RenderForgotPassword.render(this, width, height), width, height);
         }
+        else if (in_game_selection) {
+            this.scene = new Scene(RenderGameSelection.render(this, width, height), width, height);
+        }
         else {
             this.scene = new Scene(RenderSignMenu.render(this, width, height), width, height);
         }
@@ -70,25 +75,28 @@ public class HelloApplication extends Application {
         in_game = true;
         in_signup = false;
         in_forgot_password = false;
+        in_game_selection = false;
         System.out.println("Starting game");
-        String game_string = "";
-        try {
-            game_string = executeCreateGame("1");
-        } catch (IOException e) {
+
+        if (this.curr_game_name.equals("")) {
+            System.out.println("You did not initialize game name!");
             return;
         }
-        curr_game_name = "1";
+
+        /*
         JSONObject gameStateJSON = new JSONObject(game_string);
         JSONObject gameTableConfiguration = gameStateJSON.getJSONObject("gameTableConfiguration");
         this.gameTableConfigurationJSON = gameTableConfiguration;
 
-        this.scene.setRoot(RenderGame.render(this, gameTableConfiguration, this.width, this.height));
+         */
+        this.scene.setRoot(RenderGame.render(this, this.gameTableConfigurationJSON, this.width, this.height));
     }
 
     public void endGame() {
         in_game = false;
         in_signup = true;
         in_forgot_password = false;
+        in_game_selection = false;
         System.out.println("Ending game");
         user_token = "";
         this.scene.setRoot(RenderSignMenu.render(this, width, height));
@@ -98,6 +106,7 @@ public class HelloApplication extends Application {
         in_game = false;
         in_signup = true;
         in_forgot_password = false;
+        in_game_selection = false;
         System.out.println("Starting sign up");
         this.scene.setRoot(RenderSignUp.render(this, width, height));
     }
@@ -106,8 +115,19 @@ public class HelloApplication extends Application {
         in_game = false;
         in_signup = false;
         in_forgot_password = true;
+        in_game_selection = false;
         System.out.println("Starting forgot menu");
         this.scene.setRoot(RenderForgotPassword.render(this, width, height));
+    }
+
+    public void startGameSelection() {
+        in_game = false;
+        in_signup = false;
+        in_forgot_password = false;
+        in_game_selection = false;
+        System.out.println("Starting game selection");
+
+        this.scene.setRoot(RenderGameSelection.render(this, this.width, this.height));
     }
 
     public void executeSignUp(String username, String password, String confirmPassword, String email) throws IOException {
@@ -248,6 +268,63 @@ public class HelloApplication extends Application {
             System.out.println(output);
             conn.disconnect();
             return output;
+        }
+        return null;
+    }
+
+    public JSONObject executeGetGame(String gameName) throws IOException {
+        URL url = new URL("http://localhost:8080/api/game/" + gameName);
+
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setDoOutput(true);
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Authorization", "Bearer " + user_token);
+
+        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED && conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            //System.out.println("Failed: HTTP error code: " + conn.getResponseCode());
+            throw new RuntimeException("Failed: HTTP error code: " + conn.getResponseCode());
+        }
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+        String output;
+        System.out.println("Output from server ... \n");
+        while ((output = br.readLine()) != null) {
+            System.out.println(output);
+            conn.disconnect();
+            
+            // convert output to JSONObject
+            JSONObject jsonObject = new JSONObject(output);
+            return jsonObject;
+        }
+        return null;
+    }
+
+    public JSONArray executeListGames() throws IOException {
+        URL url = new URL("http://localhost:8080/api/game");
+
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setDoOutput(true);
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Authorization", "Bearer " + user_token);
+
+        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED && conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            //System.out.println("Failed: HTTP error code: " + conn.getResponseCode());
+            throw new RuntimeException("Failed: HTTP error code: " + conn.getResponseCode());
+        }
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+        String output;
+        System.out.println("Output from server ... \n");
+        while ((output = br.readLine()) != null) {
+            conn.disconnect();
+            // convert output to JSON array
+            JSONArray jsonArray = new JSONArray(output);
+            System.out.println(jsonArray);
+            return jsonArray;
         }
         return null;
     }

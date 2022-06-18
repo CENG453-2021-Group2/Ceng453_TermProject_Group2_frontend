@@ -12,6 +12,10 @@ import java.util.List;
 import group2.monopoly.frontend.Utils.BoardToCoords;
 
 public class Pawn {
+    /**
+     * This class holds the information for the player's pawn.
+     * It actually has a one-to-one relationship with player class.
+     */
     private String owner;
     private String png_path;
     private int position_square;
@@ -28,6 +32,9 @@ public class Pawn {
 
     private Group pawn_group;
 
+    /**
+     * This constructor saves all the arguments to itself, and creates a pawn group for GUI
+     */
     public Pawn(String owner, String png_path, int position_square, int grid_count, int res_height, int res_width) {
         this.owner = owner;
         this.png_path = png_path;

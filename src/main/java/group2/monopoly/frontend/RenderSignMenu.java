@@ -56,7 +56,7 @@ public class RenderSignMenu {
                     a.show();
                     return;
                 }
-                app.startGame();;
+                app.startGameSelection();
 
             }
         });
