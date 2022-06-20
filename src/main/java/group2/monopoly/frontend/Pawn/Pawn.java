@@ -11,11 +11,12 @@ import java.util.List;
 
 import group2.monopoly.frontend.Utils.BoardToCoords;
 
+/**
+    * This class holds the information for the player's pawn.
+    * It actually has a one-to-one relationship with player class.
+    * It is responsible for the pawn's movement and animation.
+    */
 public class Pawn {
-    /**
-     * This class holds the information for the player's pawn.
-     * It actually has a one-to-one relationship with player class.
-     */
     private String owner;
     private String png_path;
     private int position_square;
@@ -34,6 +35,12 @@ public class Pawn {
 
     /**
      * This constructor saves all the arguments to itself, and creates a pawn group for GUI
+        * @param owner The player's name
+        * @param png_path The path to the png file, which is the pawn's image
+        * @param position_square The square number of the player's current position
+        * @param grid_count The number of squares in the grid
+        * @param res_height The height of the board
+        * @param res_width The width of the board
      */
     public Pawn(String owner, String png_path, int position_square, int grid_count, int res_height, int res_width) {
         this.owner = owner;
@@ -50,6 +57,11 @@ public class Pawn {
         board_to_coords = new BoardToCoords(res_width, res_height, grid_count);
     }
 
+    /**
+        * This method clears the current pawn group, and creates a new one with the current pawn position.
+        * And returns the pawn group.
+        * @return Group
+     */
     public Group draw(){
         this.pawn_group.getChildren().clear();
         // draw the pawn from the png!
@@ -65,6 +77,11 @@ public class Pawn {
         return this.pawn_group;
     }
 
+    /**
+        * This method moves the pawn to the next square, and returns the animation calculated for it.
+        * @param next_square The square number of the next square
+        * @return TranslateTransition
+        */
     public TranslateTransition transition(int new_square_position) {
         // execute a transition animation!
 
