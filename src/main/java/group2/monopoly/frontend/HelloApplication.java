@@ -26,6 +26,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import group2.monopoly.frontend.Pawn.Pawn;
 
+/**
+  * This class is the main class that holds the springboot application
+ */
 @SpringBootApplication
 @RestController
 @RequestMapping("/frontend")
@@ -49,6 +52,11 @@ public class HelloApplication extends Application {
 
     public JSONObject gameJSON = null;
 
+    /**
+      * This method is the main method that runs the application
+      * It sets the scene and stage, and then shows the stage
+      * The scene is decided by the boolean variables in_game, in_signup, and in_forgot_password
+     */
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
@@ -73,6 +81,10 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
+    /**
+      * This method is called when the user clicks the join game button
+      * It sets the in_game boolean to true, and then changes the scene root to game scene
+     */
     public void startGame() {
         in_game = true;
         in_signup = false;
@@ -88,6 +100,10 @@ public class HelloApplication extends Application {
         this.scene.setRoot(RenderGame.render(this, this.gameTableConfigurationJSON, this.gameJSON, this.width, this.height));
     }
 
+    /**
+      * This method is called when the user clicks the exit button in the game
+      * It sets the in_signup boolean to true, and then changes the scene root to sign menu scene
+      */
     public void endGame() {
         in_game = false;
         in_signup = true;
@@ -98,6 +114,10 @@ public class HelloApplication extends Application {
         this.scene.setRoot(RenderSignMenu.render(this, width, height));
     }
 
+    /**
+      * This method is called when the user clicks the sign up button
+      * It sets the in_signup boolean to true, and then changes the scene root to sign up scene
+      */
     public void startSignUp() {
         in_game = false;
         in_signup = true;
@@ -107,6 +127,10 @@ public class HelloApplication extends Application {
         this.scene.setRoot(RenderSignUp.render(this, width, height));
     }
 
+    /**
+      * This method is called when the user clicks the forgot password button
+      * It sets the in_forgot_password boolean to true, and then changes the scene root to forgot password scene
+      */
     public void startForgotPassword() {
         in_game = false;
         in_signup = false;
@@ -116,16 +140,29 @@ public class HelloApplication extends Application {
         this.scene.setRoot(RenderForgotPassword.render(this, width, height));
     }
 
+    /**
+      * This method is called when the user clicks the sign in button in the sign in scene
+      * It sets the in_game_selection boolean to true, and then changes the scene root to sign menu scene
+      */
     public void startGameSelection() {
         in_game = false;
         in_signup = false;
         in_forgot_password = false;
-        in_game_selection = false;
+        in_game_selection = true;
         System.out.println("Starting game selection");
 
         this.scene.setRoot(RenderGameSelection.render(this, this.width, this.height));
     }
 
+    /**
+      * This method sends a request to backend to sign up the user
+      * It does not return a value, if it executes successfully, it finished the function normally
+      * If it fails, it throws an exception
+      * @param username the username of the user
+      * @param password the password of the user
+      * @param confirmPassword the password of the user
+      * @param email the email of the user
+     */
     public void executeSignUp(String username, String password, String confirmPassword, String email) throws IOException {
         URL url = new URL("http://localhost:8080/api/auth/register");
         /*
@@ -164,6 +201,14 @@ public class HelloApplication extends Application {
 
     }
 
+    /**
+      * This method sends a request to backend to sign in the user
+      * It does not return a value, if it executes successfully, it finishes the function normally
+      * If it fails, it throws an exception
+      * It assigns the user_token to the token that is returned from the backend
+      * @param username the username of the user
+      * @param password the password of the user
+     */
     public void executeSignIn(String username, String password) throws IOException {
         URL url = new URL("http://localhost:8080/api/auth/login");
 
@@ -201,6 +246,12 @@ public class HelloApplication extends Application {
 
     }
 
+    /**
+      * This method sends a request to backend to reset the password of the user
+      * It does not return a value, if it executes successfully, it finishes the function normally
+      * If it fails, it throws an exception
+      * @param identifier the identifier(user token) of the user
+      */
     public void executeForgotPassword(String identifier) throws IOException {
         URL url = new URL("http://localhost:8080/api/auth/forgotPassword");
 
@@ -234,7 +285,13 @@ public class HelloApplication extends Application {
         conn.disconnect();
     }
 
-    public String executeCreateGame(String gameName) throws IOException {
+    /**
+      * This method sends a request to backend to create a game
+      * It does not return a value, if it executes successfully, it finishes the function normally
+      * If it fails, it throws an exception
+      * @param gameName the name of the game
+      */
+    public void executeCreateGame(String gameName) throws IOException {
         URL url = new URL("http://localhost:8080/api/game");
 
         String postData = "{ \"name\": \"" + gameName + "\"}";
@@ -268,6 +325,12 @@ public class HelloApplication extends Application {
         return null;
     }
 
+    /**
+      * This method sends a request to backend to get the game <gameName>
+      * It returns the JSONObject that is returned from the backend
+      * @param gameName the name of the game
+      * @return the JSONObject that is returned from the backend
+     */
     public JSONObject executeGetGame(String gameName) throws IOException {
         URL url = new URL("http://localhost:8080/api/game/" + gameName);
 
@@ -297,6 +360,11 @@ public class HelloApplication extends Application {
         return null;
     }
 
+    /**
+      * This method sends a request to backend to get the list of games
+      * It returns the JSONArray that is returned from the backend
+      * @return the JSONArray that is returned from the backend
+      */
     public JSONArray executeListGames() throws IOException {
         URL url = new URL("http://localhost:8080/api/game");
 
@@ -325,6 +393,11 @@ public class HelloApplication extends Application {
         return null;
     }
 
+    /**
+      * This method sends a request to backend to make a step in the game
+      * @param will_buy the boolean value that indicates whether the player will buy the property
+      * @return String game state
+     */
     public String stepInGame(boolean will_buy) throws IOException {
         URL url = new URL("http://localhost:8080/api/game/1");
 
@@ -360,10 +433,16 @@ public class HelloApplication extends Application {
         return null;
     }
 
+    /**
+      * the main function that launches the program
+     */
     public static void main(String[] args) {
         launch();
     }
 
+    /**
+      * A rest method to start the game with an endpoint
+     */
     @GetMapping("/startGame")
     public void startGameRest() {
         startGame();
