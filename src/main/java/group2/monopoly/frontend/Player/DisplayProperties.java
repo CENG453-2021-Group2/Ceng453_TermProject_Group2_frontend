@@ -5,6 +5,10 @@ import javafx.scene.text.Text;
 
 import java.util.List;
 
+/**
+    * This class holds the information for the player's properties.
+    * It has a one-to-one relationship with player class.
+ */
 public class DisplayProperties {
     private Text property_group;
     private int grid_count;
@@ -12,6 +16,14 @@ public class DisplayProperties {
     private int height;
     private boolean is_left;
 
+    /**
+        * This constructor saves all the arguments to class variables, and creates a property group for GUI
+        * The color of the property group is determined by the is_left boolean.
+        * @param grid_count The number of squares in the grid
+        * @param width The width of the board
+        * @param height The height of the board
+        * @param is_left Whether the property is on the left or right side of the board
+    */
     public DisplayProperties(int width, int height, int grid_count, boolean is_left) {
         this.grid_count = grid_count;
         this.width = width;
@@ -35,6 +47,9 @@ public class DisplayProperties {
         System.out.println(property_group.getY());
     }
 
+    /**
+      * This method updates the player's property display.
+     */
     public void updateProperties(List<String> properties) {
         StringBuilder sb = new StringBuilder();
         if (this.is_left) {
@@ -54,6 +69,9 @@ public class DisplayProperties {
         this.property_group.setText(sb.toString());
     }
 
+    /**
+      * This method returns the player's property display.
+     */
     public Text getGroup() {
         return this.property_group;
     }
