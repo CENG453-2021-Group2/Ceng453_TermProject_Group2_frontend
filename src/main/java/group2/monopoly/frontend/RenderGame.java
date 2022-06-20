@@ -23,9 +23,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+  * This class renders the game screen
+ */
 public class RenderGame {
 
+    /**
+      * This method checks if the player can buy the property, by the given parameter
+      * @param JSONObject gamestate as JSON
+      * @return boolean if the player can buy the property
+      */
     private static boolean checkIfCanBuyProperty(JSONObject gameStateJSON) {
         JSONArray players_json = gameStateJSON.getJSONArray("players");
         JSONObject player_json = players_json.getJSONObject(0);
@@ -61,6 +68,12 @@ public class RenderGame {
         return true;
     }
 
+    /**
+      * This method prepares the property orders in the screen according to the game table configuration
+      * @param JSONObject gamestate as JSON
+      * @param boardPlaceNames the board place names
+      * @return the names of the properties according to the game table configuration
+      */
     private static List<List<String>> prepareInitialPlacesList (JSONObject gameTableConfiguration, List<String> boardPlaceNames) {
         List<List<String>> places = new ArrayList<>();// mock
 
@@ -210,6 +223,14 @@ public class RenderGame {
         return places;
     }
 
+    /**
+      * This method renders the board in the screen
+      * @param HelloApplication the spring application
+      * @param JSONObject gametableconfiguration as JSON
+      * @param JSONObject gamestate as JSON
+      * @param int width of the board
+      * @param int height of the board
+      */
     public static Group render(HelloApplication app, JSONObject gameTableConfiguration, JSONObject gameJSON, int width, int height) {
         System.out.println("got render game render");
         System.out.println(gameJSON.toString());
