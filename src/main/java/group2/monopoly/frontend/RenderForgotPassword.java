@@ -10,12 +10,23 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
+/**
+  * This class renders the forgot password scene
+  * It puts the username/email as a textfield, and a button to send the request
+ */
 public class RenderForgotPassword {
 
     private static final int field_width = 150;
     private static final int field_margin = 60;
     private static final int field_margin_margin = 10;
 
+    /**
+      * This method renders the forgot password scene
+      * @param app The main application
+      * @param width The width of the scene
+      * @param height The height of the scene
+      * @return The forgot password scene
+     */
     public static Group render(HelloApplication app, int width, int height) {
 
         System.out.println("RenderForgotPassword");
