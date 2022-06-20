@@ -5,6 +5,10 @@ import group2.monopoly.frontend.BoardRectangles;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+  * This class translates the monopoly square positions to the actual screen rectangle coordinates.
+  * The screen's rectangle positions are written hardcoded, because each of them are in a different place in screen grid, with different indexes.
+ */
 public class BoardToCoords {
     private int width;
     private int height;
@@ -12,6 +16,13 @@ public class BoardToCoords {
     private int height_step;
     private int width_step;
 
+    /**
+      * This constructor saves all the arguments to the class
+      * It calculates some of the parameters by these parameters
+        * @param width The width of the board
+        * @param height The height of the board
+        * @param grid_count The number of squares in the grid
+    */
     public BoardToCoords(int width, int height, int grid_count) {
         this.width = width;
         this.height = height;
@@ -43,7 +54,12 @@ public class BoardToCoords {
 
      */
 
-    // I don't know how I can write them here for now, so I am writing here as hardcoded
+    /**
+        * This method returns the coordinates of the square on the board
+        * All the coordinates are hardcoded, because they are in a different place in screen grid, with different indexes.
+        * @param position_square The square number of the player's current position
+        * @return List<Integer>
+     */
     public List<Integer> getCoords(int position_square){
         position_square = position_square % 16;
         int ctr = 0;
