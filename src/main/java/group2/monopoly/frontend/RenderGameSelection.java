@@ -11,14 +11,27 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+/**
+  * This class is used to render the game selection screen.
+  * It is completely static, and therefore does not need to be instantiated.
+  * It has only one method, so the reason why this is separated into one class is some isolation and logical separation.
+ */
 public class RenderGameSelection {
 
     private static final int field_width = 150;
     private static final int field_margin = 60;
     private static final int field_margin_margin = 10;
 
+    /**
+        * This method is used to render the game selection screen.
+        * It renders a table for listing all the games available,
+        * and a button for creating a new game.
+        * There currently no exit button for this screen, it will be added later.
+        * @param application The application.
+        * @param width The width of the screen.
+        * @param height The height of the screen.
+     */
     public static Group render(HelloApplication app, int width, int height) {
-        System.out.println();
 
         Group root = new Group();
 
@@ -113,7 +126,7 @@ public class RenderGameSelection {
         // add a button, getting the idInput text field
         Button joinGame = new Button("Join Game");
         joinGame.setLayoutX(width/2 - 100);
-        joinGame.setLayoutY(height/3*2-100+80);
+        joinGame.setLayoutY(height/3*2-100+50);
 
         joinGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override

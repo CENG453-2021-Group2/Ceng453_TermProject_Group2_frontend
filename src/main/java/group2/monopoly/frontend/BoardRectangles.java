@@ -17,6 +17,9 @@ import javafx.util.Duration;
 import org.json.JSONArray;
 
 
+/**
+ * 
+ */
 public class BoardRectangles {
     Group rects;
     int width, height;

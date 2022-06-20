@@ -13,11 +13,23 @@ public interface BoardElement {
      */
     public String getType();
 
+    /**
+     * @return the display name of the class, as written in the board
+     */
     public String getDisplayName();
 
+    /**
+     * @return the color of the class, depending on whether it is occupied or not
+     */
     public Color getColor();
 
+    /**
+     * Sets the element to occupied.
+     */
     public void placedPawn();
 
+    /**
+     * Sets the element to unoccupied.
+     */
     public void removedPawn();
 }
