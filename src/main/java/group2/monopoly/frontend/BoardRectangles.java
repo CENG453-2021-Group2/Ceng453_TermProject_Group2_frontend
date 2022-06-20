@@ -18,7 +18,7 @@ import org.json.JSONArray;
 
 
 /**
- * 
+ * This class handles and draws all of the board rectangles
  */
 public class BoardRectangles {
     Group rects;
@@ -29,6 +29,14 @@ public class BoardRectangles {
     BoardToCoords boardToCoords;
     List<BoardElement> board_elements = new ArrayList<>();
 
+    /**
+      * This constructor gets the resolution and board element list
+      * It uses this list to create board rectangles in this ranking
+        * @param width The width of the board
+        * @param height The height of the board
+        * @param board_elements The list of board elements
+        * @param grid_count The number of squares in the grid
+     */
     public BoardRectangles(int width, int height, List<List<String>> board_elements, int grid_count) {
         rects = new Group();
         this.width = width;
@@ -58,6 +66,9 @@ public class BoardRectangles {
         }
     }
 
+    /**
+      * This method creates the board rectangles, by using board_elements property
+    */
     public void createRectangles() {
         // There is a 5x5 board that we will fit into the whole screen
         int width_step = width / this.grid_count;
@@ -95,10 +106,18 @@ public class BoardRectangles {
         }
     }
 
+    /**
+      * This method returns the group of rectangles
+      * @return The group of rectangles
+      */
     public Group getRects() {
         return rects;
     }
 
+    /**
+      * This method creates an animation to show a player lands on a property
+        * @param index The index of the property to go 
+     */
     public FillTransition boardedToRect(int index) {
         System.out.println("Boarded to rect");
         StackPane s = (StackPane) rects.getChildren().get(index);
@@ -111,6 +130,10 @@ public class BoardRectangles {
         //r.setFill(board_elements.get(index).getColor());
     }
 
+    /**
+      * This method creates an animation to show a player leaves a property
+        * @param index The index of the property to go 
+     */
     public FillTransition unBoardedToRect(int index) {
         System.out.println("Unboarded to rect");
         StackPane s = (StackPane) rects.getChildren().get(index);
@@ -122,6 +145,12 @@ public class BoardRectangles {
         //r.setFill(board_elements.get(index).getColor());
     }
 
+    /**
+      * This method update the rectangle texts, to show if a property is owned by a player
+      * It changes the colors of the texts
+      * @param player1_own The list of properties owned by player 1
+      * @param player2_own The list of properties owned by player 2
+      */
     public void updateRectTexts(JSONArray player1_own, JSONArray player2_own) {
         System.out.println("updateRectTexts");
         System.out.println(player1_own);
