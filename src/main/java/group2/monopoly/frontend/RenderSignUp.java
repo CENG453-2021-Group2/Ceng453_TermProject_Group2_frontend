@@ -8,12 +8,23 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 
+/**
+ * It renders a sign up form
+ */
 public class RenderSignUp {
 
     private static final int field_width = 150;
     private static final int field_margin = 60;
     private static final int field_margin_margin = 10;
 
+    /**
+     * It creates a bunch of text fields and buttons and returns them to render sign up menu
+     * 
+     * @param app The HelloApplication object that is running the game.
+     * @param width the width of the window
+     * @param height the height of the window
+     * @return A Group object
+     */
     public static Group render(HelloApplication app, int width, int height) {
 
         System.out.println("RenderSignUp");

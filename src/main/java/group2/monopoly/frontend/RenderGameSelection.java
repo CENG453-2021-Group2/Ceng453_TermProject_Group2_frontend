@@ -27,7 +27,7 @@ public class RenderGameSelection {
         * It renders a table for listing all the games available,
         * and a button for creating a new game.
         * There currently no exit button for this screen, it will be added later.
-        * @param application The application.
+        * @param app The application.
         * @param width The width of the screen.
         * @param height The height of the screen.
      */

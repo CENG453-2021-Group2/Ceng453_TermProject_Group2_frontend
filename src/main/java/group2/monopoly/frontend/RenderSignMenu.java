@@ -8,12 +8,24 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 
+/**
+  * This class renders the sign in menu
+  */
 public class RenderSignMenu {
 
     private static final int field_width = 150;
     private static final int field_margin = 60;
     private static final int field_margin_margin = 10;
 
+
+   /**
+    * It creates a bunch of JavaFX objects and adds them to a Group object to render the sign in menu
+    * 
+    * @param app The application object
+    * @param width the width of the window
+    * @param height The height of the window
+    * @return A Group object
+    */
     public static Group render(HelloApplication app, int width, int height) {
 
         System.out.println("RenderSignMenu.render");

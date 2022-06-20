@@ -30,7 +30,7 @@ public class RenderGame {
 
     /**
       * This method checks if the player can buy the property, by the given parameter
-      * @param JSONObject gamestate as JSON
+      * @param gameStateJSON gamestate as JSON
       * @return boolean if the player can buy the property
       */
     private static boolean checkIfCanBuyProperty(JSONObject gameStateJSON) {
@@ -70,7 +70,7 @@ public class RenderGame {
 
     /**
       * This method prepares the property orders in the screen according to the game table configuration
-      * @param JSONObject gamestate as JSON
+      * @param gameTableConfiguration gamestate as JSON
       * @param boardPlaceNames the board place names
       * @return the names of the properties according to the game table configuration
       */
@@ -225,11 +225,11 @@ public class RenderGame {
 
     /**
       * This method renders the board in the screen
-      * @param HelloApplication the spring application
-      * @param JSONObject gametableconfiguration as JSON
-      * @param JSONObject gamestate as JSON
-      * @param int width of the board
-      * @param int height of the board
+      * @param app the spring application
+      * @param gameTableConfiguration gametableconfiguration as JSON
+      * @param gameJSON gamestate as JSON
+      * @param width width of the board
+      * @param height height of the board
       */
     public static Group render(HelloApplication app, JSONObject gameTableConfiguration, JSONObject gameJSON, int width, int height) {
         System.out.println("got render game render");
